@@ -5,13 +5,14 @@
 local M = {}
 
 local jieba = require("jieba")
-local st = require("stringtools")
+local ut = require("utils")
 local utf8 = require 'lua-utf8'
 
 
 local pat_space = "%s+"   -- 空格
 local pat_hans = "[a-zA-Z0-9][%z\1-\127\194-\244][\128-\191]*" -- 非单词
 local pat_punc = "[，。？！；/（）【】]"
+
 local function is_punctuation(char)
   if utf8.match(char, pat_punc)~= nil then
     return true
@@ -56,7 +57,7 @@ local parse_tokens= function (tokens)
         local i = cum_l
         local t = get_token_type(tok)
         cum_l = cum_l + #tok
-        local j = cum_l - #st.sub(tok, st.len(tok),st.len(tok))
+        local j = cum_l - #ut.sub(tok, ut.len(tok),ut.len(tok))
         table.insert(parsed, {i = i, j = j, t = t})
     end
     return parsed
@@ -143,14 +144,14 @@ end
 local function index_tokens(parsed_tokens, bi)
     for ti = #parsed_tokens, 1, -1 do
         if parsed_tokens[ti].i <= bi then
-            return ti
+            return ti - 1
         end
     end
     error("token index of byte index " .. bi .. " not found in parsed tokens")
 end
 
 local function index_last_start_of_word(parsed_tokens)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return 0
     end
     for ti = #parsed_tokens, 1, -1 do
@@ -161,9 +162,22 @@ local function index_last_start_of_word(parsed_tokens)
     return nil
 end
 
+local form_parsed_tokens = function(elements)
+  for _,x in pairs(elements) do
+    local pt = parse_tokens(jieba.lcut(x))
+    pt = stack_merge(pt, insert_implicit_space_rule)
+    return pt
+  end
+end
+
+-- local test = {}
+-- local test = form_parsed_tokens({"  "})
+-- local test = form_parsed_tokens({"你好","l","，，"})
+-- ut.print(index_last_start_of_word(test))
+
 
 local function index_prev_start_of_word(parsed_tokens, ci)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return nil
     end
     local ti = index_tokens(parsed_tokens, ci)
@@ -180,7 +194,7 @@ local function index_prev_start_of_word(parsed_tokens, ci)
 end
 
 local function index_last_start_of_WORD(parsed_tokens)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return 0
     end
     local last_valid_i = nil
@@ -195,7 +209,7 @@ local function index_last_start_of_WORD(parsed_tokens)
 end
 
 local function index_prev_start_of_WORD(parsed_tokens, ci)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return nil
     end
     local ti = index_tokens(parsed_tokens, ci)
@@ -215,7 +229,7 @@ local function index_prev_start_of_WORD(parsed_tokens, ci)
 end
 
 local function index_last_end_of_word(parsed_tokens)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return 0
     end
     for ti = #parsed_tokens, 1, -1 do
@@ -227,7 +241,7 @@ local function index_last_end_of_word(parsed_tokens)
 end
 
 local function index_prev_end_of_word(parsed_tokens, ci)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return nil
     end
     local ti = index_tokens(parsed_tokens, ci) - 1
@@ -241,7 +255,7 @@ local function index_prev_end_of_word(parsed_tokens, ci)
 end
 
 local function index_last_end_of_WORD(parsed_tokens)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return 0
     end
     for ti = #parsed_tokens, 1, -1 do
@@ -253,7 +267,7 @@ local function index_last_end_of_WORD(parsed_tokens)
 end
 
 local function index_prev_end_of_WORD(parsed_tokens, ci)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return nil
     end
     local ti = index_tokens(parsed_tokens, ci)
@@ -274,7 +288,7 @@ local function index_prev_end_of_WORD(parsed_tokens, ci)
 end
 
 local function index_first_start_of_word(parsed_tokens)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return 0
     end
     for i = 1, #parsed_tokens do
@@ -286,7 +300,7 @@ local function index_first_start_of_word(parsed_tokens)
 end
 
 local function index_next_start_of_word(parsed_tokens, ci)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return nil
     end
     local ti = index_tokens(parsed_tokens, ci) + 1
@@ -300,7 +314,7 @@ local function index_next_start_of_word(parsed_tokens, ci)
 end
 
 local function index_first_start_of_WORD(parsed_tokens)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return 0
     end
     for i = 1, #parsed_tokens do
@@ -312,7 +326,7 @@ local function index_first_start_of_WORD(parsed_tokens)
 end
 
 local function index_next_start_of_WORD(parsed_tokens, ci)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return nil
     end
     local ti = index_tokens(parsed_tokens, ci)
@@ -333,7 +347,7 @@ local function index_next_start_of_WORD(parsed_tokens, ci)
 end
 
 local function index_first_end_of_word(parsed_tokens)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return 0
     end
     for _, tok in ipairs(parsed_tokens) do
@@ -345,7 +359,7 @@ local function index_first_end_of_word(parsed_tokens)
 end
 
 local function index_next_end_of_word(parsed_tokens, ci)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return nil
     end
     local ti = index_tokens(parsed_tokens, ci)
@@ -362,7 +376,7 @@ local function index_next_end_of_word(parsed_tokens, ci)
 end
 
 local function index_first_end_of_WORD(parsed_tokens)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return 0
     end
     local last_valid_j = nil
@@ -377,7 +391,7 @@ local function index_first_end_of_WORD(parsed_tokens)
 end
 
 local function index_next_end_of_WORD(parsed_tokens, ci)
-    if not parsed_tokens then
+    if not parsed_tokens or #parsed_tokens == 0 then
         return nil
     end
     local ti = index_tokens(parsed_tokens, ci)
@@ -408,10 +422,10 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
     end
     -- -- unwrap the row and col from the cursor position
     local row, col = cursor_pos[1], cursor_pos[2]
+    print(row == sentinel_row)
     if row == sentinel_row then
-        pt = parse_tokens(jieba.cut(buffer[row]))
+        pt = parse_tokens(jieba.lcut(buffer[row]))
         pt = stack_merge(pt, insert_implicit_space_rule)
-        col = primary_index_func(pt, col)
         if col == nil then
             if backward == true then
                 if pt ~= nil then
@@ -427,11 +441,15 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
                 end
             end
         end
+        print(pt[1].i)
+        col = primary_index_func(pt, col)
         -- return a table representing cursor position
+        ut.print(pt)
+        ut.print({row, col})
         return {row, col}
     end
     -- similar steps for when row is not the sentinel_row
-    pt = parse_tokens(jieba.cut(buffer[row]))
+    pt = parse_tokens(jieba.lcut(buffer[row]))
     pt = stack_merge(pt, insert_implicit_space_rule)
     col = primary_index_func(pt, col)
     if col ~= nil then
@@ -439,7 +457,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
     end
     row = row + row_step
     while row ~= sentinel_row do
-        pt = parse_tokens(jieba.cut(buffer[row]))
+        pt = parse_tokens(jieba.lcut(buffer[row]))
         pt = stack_merge(pt, insert_implicit_space_rule)
         col = secondary_index_func(pt)
         if col ~= nil then
@@ -447,7 +465,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
         end
         row = row + row_step
     end
-    pt = parse_tokens(jieba.cut(buffer[row]))
+    pt = parse_tokens(jieba.lcut(buffer[row]))
     pt = stack_merge(pt, insert_implicit_space_rule)
     col = secondary_index_func(pt)
     if col == nil then
@@ -457,58 +475,61 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 end
 
 local update_lines = function()
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
+    Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
+    -- print("update_lines")
+    -- print(#Lines)
 end
-vim.api.nvim_create_autocmd("BufWritePost", {callback = update_lines})
+vim.api.nvim_create_autocmd("BufWritePost", {callback = update_lines}
+)
 
 
 local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 M.wordmotion_b = function()
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  local pos = navigate(index_prev_start_of_word, index_last_start_of_word, true, lines, cursor_pos)
+  local pos = navigate(index_prev_start_of_word, index_last_start_of_word, true, Lines, cursor_pos)
   vim.api.nvim_win_set_cursor(0, pos)
 end
 
 M.wordmotion_B = function()
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  local pos = navigate(index_prev_start_of_WORD, index_last_start_of_WORD, true, lines, cursor_pos)
+  local pos = navigate(index_prev_start_of_WORD, index_last_start_of_WORD, true, Lines, cursor_pos)
   vim.api.nvim_win_set_cursor(0, pos)
 end
 
 M.wordmotion_w = function()
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  local pos = navigate(index_next_start_of_word, index_first_start_of_word, false, lines, cursor_pos)
+  local pos = navigate(index_next_start_of_word, index_first_start_of_word, false, Lines, cursor_pos)
   vim.api.nvim_win_set_cursor(0, pos)
   return pos
 end
 
 M.wordmotion_W = function()
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  local pos = navigate(index_next_start_of_WORD, index_first_start_of_WORD, false, lines, cursor_pos)
+  local pos = navigate(index_next_start_of_WORD, index_first_start_of_WORD, false, Lines, cursor_pos)
   vim.api.nvim_win_set_cursor(0, pos)
 end
 
 M.wordmotion_e = function()
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  local pos = navigate(index_next_end_of_word, index_first_end_of_word, false, lines, cursor_pos)
+  local pos = navigate(index_next_end_of_word, index_first_end_of_word, false, Lines, cursor_pos)
   vim.api.nvim_win_set_cursor(0, pos)
 end
 
 M.wordmotion_E = function()
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  local pos = navigate(index_next_end_of_WORD, index_first_end_of_WORD, false, lines, cursor_pos)
+  local pos = navigate(index_next_end_of_WORD, index_first_end_of_WORD, false, Lines, cursor_pos)
   vim.api.nvim_win_set_cursor(0, pos)
 end
 
 M.wordmotion_ge = function()
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  local pos = navigate(index_prev_end_of_word, index_last_end_of_word, true, lines, cursor_pos)
+  local pos = navigate(index_prev_end_of_word, index_last_end_of_word, true, Lines, cursor_pos)
   vim.api.nvim_win_set_cursor(0, pos)
 end
 
 M.wordmotion_gE = function()
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  local pos = navigate(index_prev_end_of_WORD, index_last_end_of_WORD, true, lines, cursor_pos)
+  local pos = navigate(index_prev_end_of_WORD, index_last_end_of_WORD, true, Lines, cursor_pos)
   vim.api.nvim_win_set_cursor(0, pos)
 end
 
