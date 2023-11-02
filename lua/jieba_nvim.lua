@@ -1,13 +1,11 @@
 local M = {}
 package.path = package.path..";./jieba-lua/lua/?.lua;"
-print(package.path)
 local jieba = require("jieba")
-local ut = require("utils")
+local ut = require("jb_utils")
 local function script_path()
 	local str = debug.getinfo(2, "S").source:sub(2)
 	return str:match("(.*/)")
 end
-print(script_path())
 local pat_space = "%s+" -- 空格
 
 -- TokenType Enum
