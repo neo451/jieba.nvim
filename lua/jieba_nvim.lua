@@ -1,30 +1,14 @@
--- working
 local M = {}
-
+package.path = package.path..";./jieba-lua/lua/?.lua;"
+print(package.path)
 local jieba = require("jieba")
 local ut = require("utils")
-local utf8 = require("lua-utf8")
-
+local function script_path()
+	local str = debug.getinfo(2, "S").source:sub(2)
+	return str:match("(.*/)")
+end
+print(script_path())
 local pat_space = "%s+" -- 空格
-local pat_hans = "[a-zA-Z0-9][%z\1-\127\194-\244][\128-\191]*" -- 非单词
-local pat_punc = "[，。？！；/（）【】]"
-
-local function is_punctuation(char)
-	if utf8.match(char, pat_punc) ~= nil then
-		return true
-	else
-		return false
-	end
-end
-local function checkIfChinese(input)
-	for _, codepoint in utf8.codes(input) do
-		if codepoint >= 0x4E00 and codepoint <= 0x9FA5 then -- Range for typical Chinese characters
-			return true
-		end
-	end
-
-	return false
-end
 
 -- TokenType Enum
 TokenType = { hans = 1, punc = 2, space = 3, non_word = 4 }
@@ -33,10 +17,10 @@ local function get_token_type(token)
 	if not token or string.match(token, pat_space) then
 		return TokenType.space
 	end
-	if is_punctuation(token) then
+	if ut.is_punctuation(token) then
 		return TokenType.punc
 	end
-	if checkIfChinese(token) or string.match(token, "[a-zA-Z0-9]") then
+	if ut.isChineseCharacter(token) or string.match(token, "[a-zA-Z0-9]") then
 		return TokenType.hans
 	end
 	return TokenType.non_word
@@ -135,16 +119,17 @@ local function stack_merge(elements, rule_func)
 	return stack
 end
 
--- error handling
+
 local function index_tokens(parsed_tokens, bi)
 	for ti = #parsed_tokens, 1, -1 do
 		if parsed_tokens[ti].i <= bi then
-			return ti - 1
+			return ti
 		end
 	end
 	error("token index of byte index " .. bi .. " not found in parsed tokens")
 end
 
+-- passed
 local function index_last_start_of_word(parsed_tokens)
 	if not parsed_tokens or #parsed_tokens == 0 then
 		return 0
@@ -156,19 +141,6 @@ local function index_last_start_of_word(parsed_tokens)
 	end
 	return nil
 end
-
-local form_parsed_tokens = function(elements)
-	for _, x in pairs(elements) do
-		local pt = parse_tokens(jieba.lcut(x))
-		pt = stack_merge(pt, insert_implicit_space_rule)
-		return pt
-	end
-end
-
--- local test = {}
--- local test = form_parsed_tokens({"  "})
-local test = form_parsed_tokens({ "你好", "l", "，，" })
-ut.print(index_last_start_of_word(test))
 
 local function index_prev_start_of_word(parsed_tokens, ci)
 	if parsed_tokens == nil or #parsed_tokens == 0 then
@@ -416,32 +388,27 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	end
 	-- -- unwrap the row and col from the cursor position
 	local row, col = cursor_pos[1], cursor_pos[2]
-	print(row == sentinel_row)
 	if row == sentinel_row then
 		pt = parse_tokens(jieba.lcut(buffer[row]))
 		pt = stack_merge(pt, insert_implicit_space_rule)
 		col = primary_index_func(pt, col)
 
 		if col == nil then
-			-- if backward == true then
-			--     if pt ~= nil then
-			--         col = pt[1].i
-			--     else
-			--         col = 0
-			--     end
-			-- else
-			--     if pt ~= nil then
-			--         col = pt[#pt].j
-			--     else
-			--         col = 0
-			--     end
-			-- end
-			col = 0
+			if backward == true then
+			    if pt ~= nil then
+			        col = pt[1].i
+			    else
+			        col = 0
+			    end
+			else
+			    if pt ~= nil then
+			        col = pt[#pt].j
+			    else
+			        col = 0
+			    end
+			end
 		end
-		print(pt[1].i)
 		-- return a table representing cursor position
-		ut.print(pt)
-		ut.print({ row, col })
 		return { row, col }
 	end
 	-- similar steps for when row is not the sentinel_row
@@ -470,14 +437,13 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	return { row, col }
 end
 
+Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 local update_lines = function()
 	Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
-	-- print("update_lines")
-	-- print(#Lines)
 end
-vim.api.nvim_create_autocmd("BufWritePost", { callback = update_lines })
+vim.api.nvim_create_autocmd({"InsertLeave"},
+  { callback = update_lines })
 
-local lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 M.wordmotion_b = function()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 	local pos = navigate(index_prev_start_of_word, index_last_start_of_word, true, Lines, cursor_pos)
@@ -527,31 +493,4 @@ M.wordmotion_gE = function()
 	vim.api.nvim_win_set_cursor(0, pos)
 end
 
--- M.push = function ()
---   sm.push("jieba","n",{
---     ["w"] = "<cmd>=lua require('jieba_nvim').wordmotion_w<cr>",
---     ["b"] = "<cmd>lua require'jieba_nvim'.wordmotion_b<cr>",
---     ["W"] = "<cmd>lua require'jieba_nvim'.wordmotion_W<cr>",
---     ["B"] = "<cmd>lua require'jieba_nvim'.wordmotion_B<cr>",
---     }
---   )
--- end
---
---
--- M.pop = function()
---   sm.pop("jieba")
--- end
-
 return M
-
--- 搜索方案对move不是很友好，但是后面也许有用
--- M.parseline = function()
---   local c_word = vim.fn.expand("<cword>")
---   local words = jieba.cut(c_word)
---   local full_slice = sliceCN(c_word)
---   st.print(full_slice)
---   local first = words[3]
---   vim.cmd("/"..first)
---   vim.cmd("normal! n")
---   vim.cmd("noh")
--- end
