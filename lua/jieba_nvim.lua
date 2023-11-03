@@ -3,6 +3,9 @@ local jieba = require("jieba")
 local ut = require("jb_utils")
 local pat_space = "%s+" -- 空格
 
+-- bug: Cursor position outside buffer wordmotion_w
+-- 应该是navigate 边缘行的问题
+
 -- TokenType Enum
 TokenType = { hans = 1, punc = 2, space = 3, non_word = 4 }
 
@@ -111,7 +114,6 @@ local function stack_merge(elements, rule_func)
 
 	return stack
 end
-
 
 local function index_tokens(parsed_tokens, bi)
 	for ti = #parsed_tokens, 1, -1 do
@@ -388,17 +390,17 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 
 		if col == nil then
 			if backward == true then
-			    if pt ~= nil then
-			        col = pt[1].i
-			    else
-			        col = 0
-			    end
+				if pt ~= nil then
+					col = pt[1].i
+				else
+					col = 0
+				end
 			else
-			    if pt ~= nil then
-			        col = pt[#pt].j
-			    else
-			        col = 0
-			    end
+				if pt ~= nil then
+					col = pt[#pt].j
+				else
+					col = 0
+				end
 			end
 		end
 		-- return a table representing cursor position
@@ -425,7 +427,19 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	pt = stack_merge(pt, insert_implicit_space_rule)
 	col = secondary_index_func(pt)
 	if col == nil then
-		return { row, 0 }
+		if backward == true then
+			if pt ~= nil then
+				col = pt[1].i
+			else
+				col = 0
+			end
+		else
+			if pt ~= nil then
+				col = pt[#pt].j
+			else
+				col = 0
+			end
+		end
 	end
 	return { row, col }
 end
@@ -434,8 +448,7 @@ Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 local update_lines = function()
 	Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 end
-vim.api.nvim_create_autocmd({"InsertLeave"},
-  { callback = update_lines })
+vim.api.nvim_create_autocmd({ "InsertLeave" }, { callback = update_lines })
 
 M.wordmotion_b = function()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
