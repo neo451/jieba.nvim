@@ -3,9 +3,7 @@ local jieba = require("jieba")
 local ut = require("jb_utils")
 local pat_space = "%s+" -- 空格
 
--- bug: Cursor position outside buffer wordmotion_w
--- 应该是navigate 边缘行的问题
-
+--bug,最后一行不动w, 最后一个词爆炸
 -- TokenType Enum
 TokenType = { hans = 1, punc = 2, space = 3, non_word = 4 }
 
@@ -384,7 +382,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	-- -- unwrap the row and col from the cursor position
 	local row, col = cursor_pos[1], cursor_pos[2]
 	if row == sentinel_row then
-		pt = parse_tokens(jieba.lcut(buffer[row]))
+		pt = parse_tokens(jieba.lcut(buffer[row],false,true))
 		pt = stack_merge(pt, insert_implicit_space_rule)
 		col = primary_index_func(pt, col)
 
@@ -407,7 +405,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		return { row, col }
 	end
 	-- similar steps for when row is not the sentinel_row
-	pt = parse_tokens(jieba.lcut(buffer[row]))
+	pt = parse_tokens(jieba.lcut(buffer[row],false,true))
 	pt = stack_merge(pt, insert_implicit_space_rule)
 	col = primary_index_func(pt, col)
 	if col ~= nil then
@@ -415,7 +413,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	end
 	row = row + row_step
 	while row ~= sentinel_row do
-		pt = parse_tokens(jieba.lcut(buffer[row]))
+		pt = parse_tokens(jieba.lcut(buffer[row],false,true))
 		pt = stack_merge(pt, insert_implicit_space_rule)
 		col = secondary_index_func(pt)
 		if col ~= nil then
@@ -423,7 +421,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		end
 		row = row + row_step
 	end
-	pt = parse_tokens(jieba.lcut(buffer[row]))
+	pt = parse_tokens(jieba.lcut(buffer[row],false,true))
 	pt = stack_merge(pt, insert_implicit_space_rule)
 	col = secondary_index_func(pt)
 	if col == nil then
@@ -499,6 +497,26 @@ M.wordmotion_gE = function()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 	local pos = navigate(index_prev_end_of_WORD, index_last_end_of_WORD, true, Lines, cursor_pos)
 	vim.api.nvim_win_set_cursor(0, pos)
+end
+
+M.delete_w = function()
+  M.dw_callback()
+  vim.go.operatorfunc = "v:lua.require'jieba_nvim'.dw_callback"
+  return vim.cmd("normal! g@l")
+end
+
+-- M.change_w = function()
+--   M.dw_callback()
+--   vim.cmd("startinsert")
+-- end
+
+M.dw_callback = function ()
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+	local pos = navigate(index_next_start_of_word, index_first_start_of_word, false, Lines, cursor_pos)
+  M.wordmotion_ge()
+  M.wordmotion_w()
+  vim.api.nvim_buf_set_text(0, cursor_pos[1] - 1, cursor_pos[2] , pos[1] - 1, pos[2] , {})
+  update_lines()
 end
 
 return M
