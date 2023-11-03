@@ -126,7 +126,7 @@ end
 
 -- passed
 local function index_last_start_of_word(parsed_tokens)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return 0
 	end
 	for ti = #parsed_tokens, 1, -1 do
@@ -138,7 +138,7 @@ local function index_last_start_of_word(parsed_tokens)
 end
 
 local function index_prev_start_of_word(parsed_tokens, ci)
-	if parsed_tokens == nil or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return nil
 	end
 	local ti = index_tokens(parsed_tokens, ci)
@@ -155,7 +155,7 @@ local function index_prev_start_of_word(parsed_tokens, ci)
 end
 
 local function index_last_start_of_WORD(parsed_tokens)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return 0
 	end
 	local last_valid_i = nil
@@ -170,7 +170,7 @@ local function index_last_start_of_WORD(parsed_tokens)
 end
 
 local function index_prev_start_of_WORD(parsed_tokens, ci)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return nil
 	end
 	local ti = index_tokens(parsed_tokens, ci)
@@ -190,7 +190,7 @@ local function index_prev_start_of_WORD(parsed_tokens, ci)
 end
 
 local function index_last_end_of_word(parsed_tokens)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return 0
 	end
 	for ti = #parsed_tokens, 1, -1 do
@@ -202,7 +202,7 @@ local function index_last_end_of_word(parsed_tokens)
 end
 
 local function index_prev_end_of_word(parsed_tokens, ci)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return nil
 	end
 	local ti = index_tokens(parsed_tokens, ci) - 1
@@ -216,7 +216,7 @@ local function index_prev_end_of_word(parsed_tokens, ci)
 end
 
 local function index_last_end_of_WORD(parsed_tokens)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return 0
 	end
 	for ti = #parsed_tokens, 1, -1 do
@@ -228,7 +228,7 @@ local function index_last_end_of_WORD(parsed_tokens)
 end
 
 local function index_prev_end_of_WORD(parsed_tokens, ci)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return nil
 	end
 	local ti = index_tokens(parsed_tokens, ci)
@@ -249,7 +249,7 @@ local function index_prev_end_of_WORD(parsed_tokens, ci)
 end
 
 local function index_first_start_of_word(parsed_tokens)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return 0
 	end
 	for i = 1, #parsed_tokens do
@@ -261,7 +261,7 @@ local function index_first_start_of_word(parsed_tokens)
 end
 
 local function index_next_start_of_word(parsed_tokens, ci)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return nil
 	end
 	local ti = index_tokens(parsed_tokens, ci) + 1
@@ -275,7 +275,7 @@ local function index_next_start_of_word(parsed_tokens, ci)
 end
 
 local function index_first_start_of_WORD(parsed_tokens)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return 0
 	end
 	for i = 1, #parsed_tokens do
@@ -287,7 +287,7 @@ local function index_first_start_of_WORD(parsed_tokens)
 end
 
 local function index_next_start_of_WORD(parsed_tokens, ci)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return nil
 	end
 	local ti = index_tokens(parsed_tokens, ci)
@@ -308,7 +308,7 @@ local function index_next_start_of_WORD(parsed_tokens, ci)
 end
 
 local function index_first_end_of_word(parsed_tokens)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return 0
 	end
 	for _, tok in ipairs(parsed_tokens) do
@@ -320,7 +320,7 @@ local function index_first_end_of_word(parsed_tokens)
 end
 
 local function index_next_end_of_word(parsed_tokens, ci)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return nil
 	end
 	local ti = index_tokens(parsed_tokens, ci)
@@ -337,7 +337,7 @@ local function index_next_end_of_word(parsed_tokens, ci)
 end
 
 local function index_first_end_of_WORD(parsed_tokens)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return 0
 	end
 	local last_valid_j = nil
@@ -352,7 +352,7 @@ local function index_first_end_of_WORD(parsed_tokens)
 end
 
 local function index_next_end_of_WORD(parsed_tokens, ci)
-	if not parsed_tokens or #parsed_tokens == 0 then
+	if #parsed_tokens == 0 then
 		return nil
 	end
 	local ti = index_tokens(parsed_tokens, ci)
@@ -390,13 +390,13 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 
 		if col == nil then
 			if backward == true then
-				if pt ~= nil then
+				if #pt ~= 0 then
 					col = pt[1].i
 				else
 					col = 0
 				end
 			else
-				if pt ~= nil then
+				if #pt ~= 0 then
 					col = pt[#pt].j
 				else
 					col = 0
@@ -428,13 +428,13 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	col = secondary_index_func(pt)
 	if col == nil then
 		if backward == true then
-			if pt ~= nil then
+			if #pt ~= 0 then
 				col = pt[1].i
 			else
 				col = 0
 			end
 		else
-			if pt ~= nil then
+			if #pt ~= 0 then
 				col = pt[#pt].j
 			else
 				col = 0
@@ -445,9 +445,11 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 end
 
 Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
+
 local update_lines = function()
 	Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 end
+
 vim.api.nvim_create_autocmd({ "InsertLeave" }, { callback = update_lines })
 
 M.wordmotion_b = function()
