@@ -5,7 +5,7 @@
 ## 安装
 lazy.nvim:
 ```
-"noearc/jieba.nvim"
+{'noearc/jieba.nvim', dependencies = {'noearc/jieba-lua'}},
 ```
 
 ## 设置
