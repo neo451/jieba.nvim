@@ -1,3 +1,0 @@
-[submodule "lua/jieba-lua"]
-	path = lua/jieba-lua
-	url = git@github.com:noearc/jieba-lua.git
