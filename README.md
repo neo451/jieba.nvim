@@ -10,6 +10,7 @@ lazy.nvim:
 
 ## 设置
 ```
+vim.keymap.set('n', 'daw', ":lua require'jieba_nvim'.delete_w()<CR>", {noremap = false, silent = true})
 vim.keymap.set('n', 'B', ':lua require("jieba_nvim").wordmotion_B()<CR>', {noremap = false, silent = true})
 vim.keymap.set('n', 'b', ':lua require("jieba_nvim").wordmotion_b()<CR>', {noremap = false, silent = true})
 vim.keymap.set('n', 'w', ':lua require("jieba_nvim").wordmotion_w()<CR>', {noremap = false, silent = true})
