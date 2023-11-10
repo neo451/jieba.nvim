@@ -3,7 +3,9 @@ local jieba = require("jieba")
 local ut = require("jb_utils")
 local pat_space = "%s+" -- 空格
 
---bug,最后一行不动w, 最后一个词爆炸
+-- 卡壳问题
+-- hmm 会把"test = parse"这样的的情况判断为hans: test = par 和 se
+-- 暂不用
 -- TokenType Enum
 TokenType = { hans = 1, punc = 2, space = 3, non_word = 4 }
 
@@ -36,6 +38,8 @@ local parse_tokens = function(tokens)
 	end
 	return parsed
 end
+
+
 
 local function _gen_implicit_space_in_between(parsed_tok2)
 	local i2 = parsed_tok2.i
@@ -262,8 +266,10 @@ local function index_next_start_of_word(parsed_tokens, ci)
 		return nil
 	end
 	local ti = index_tokens(parsed_tokens, ci) + 1
+  print(vim.inspect(parsed_tokens))
 	while ti <= #parsed_tokens do
 		if parsed_tokens[ti].t ~= TokenType.space then
+      print(parsed_tokens[ti].i, parsed_tokens[ti].t)
 			return parsed_tokens[ti].i
 		end
 		ti = ti + 1
@@ -381,7 +387,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	-- -- unwrap the row and col from the cursor position
 	local row, col = cursor_pos[1], cursor_pos[2]
 	if row == sentinel_row then
-		pt = parse_tokens(jieba.lcut(buffer[row],false,true))
+		pt = parse_tokens(jieba.lcut(buffer[row]))
 		pt = stack_merge(pt, insert_implicit_space_rule)
 		col = primary_index_func(pt, col)
 
@@ -404,7 +410,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		return { row, col }
 	end
 	-- similar steps for when row is not the sentinel_row
-	pt = parse_tokens(jieba.lcut(buffer[row],false,true))
+	pt = parse_tokens(jieba.lcut(buffer[row]))
 	pt = stack_merge(pt, insert_implicit_space_rule)
 	col = primary_index_func(pt, col)
 	if col ~= nil then
@@ -412,7 +418,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	end
 	row = row + row_step
 	while row ~= sentinel_row do
-		pt = parse_tokens(jieba.lcut(buffer[row],false,true))
+		pt = parse_tokens(jieba.lcut(buffer[row]))
 		pt = stack_merge(pt, insert_implicit_space_rule)
 		col = secondary_index_func(pt)
 		if col ~= nil then
@@ -420,7 +426,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		end
 		row = row + row_step
 	end
-	pt = parse_tokens(jieba.lcut(buffer[row],false,true))
+	pt = parse_tokens(jieba.lcut(buffer[row]))
 	pt = stack_merge(pt, insert_implicit_space_rule)
 	col = secondary_index_func(pt)
 	if col == nil then
@@ -463,6 +469,8 @@ end
 
 M.wordmotion_w = function()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  -- test = jieba.lcut(vim.api.nvim_get_current_line())
+  -- print(vim.inspect(parse_tokens(test)))
 	local pos = navigate(index_next_start_of_word, index_first_start_of_word, false, Lines, cursor_pos)
 	vim.api.nvim_win_set_cursor(0, pos)
 	return pos
