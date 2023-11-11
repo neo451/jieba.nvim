@@ -266,7 +266,6 @@ local function index_next_start_of_word(parsed_tokens, ci)
 		return nil
 	end
 	local ti = index_tokens(parsed_tokens, ci) + 1
-  print(vim.inspect(parsed_tokens))
 	while ti <= #parsed_tokens do
 		if parsed_tokens[ti].t ~= TokenType.space then
       print(parsed_tokens[ti].i, parsed_tokens[ti].t)
