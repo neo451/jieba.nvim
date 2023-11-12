@@ -387,7 +387,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	-- -- unwrap the row and col from the cursor position
 	local row, col = cursor_pos[1], cursor_pos[2]
 	if row == sentinel_row then
-		pt = parse_tokens(jieba.lcut(buffer[row]))
+		pt = parse_tokens(jieba.lcut(buffer[row], false, true))
 		pt = stack_merge(pt, insert_implicit_space_rule)
 		col = primary_index_func(pt, col)
 
@@ -410,7 +410,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		return { row, col }
 	end
 	-- similar steps for when row is not the sentinel_row
-	pt = parse_tokens(jieba.lcut(buffer[row]))
+	pt = parse_tokens(jieba.lcut(buffer[row], false, true))
 	pt = stack_merge(pt, insert_implicit_space_rule)
 	col = primary_index_func(pt, col)
 	if col ~= nil then
@@ -418,7 +418,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	end
 	row = row + row_step
 	while row ~= sentinel_row do
-		pt = parse_tokens(jieba.lcut(buffer[row]))
+		pt = parse_tokens(jieba.lcut(buffer[row], false, true))
 		pt = stack_merge(pt, insert_implicit_space_rule)
 		col = secondary_index_func(pt)
 		if col ~= nil then
@@ -426,7 +426,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		end
 		row = row + row_step
 	end
-	pt = parse_tokens(jieba.lcut(buffer[row]))
+	pt = parse_tokens(jieba.lcut(buffer[row], false, true))
 	pt = stack_merge(pt, insert_implicit_space_rule)
 	col = secondary_index_func(pt)
 	if col == nil then
@@ -522,7 +522,7 @@ M.delete_w = function ()
 end
 
 M.select_w = function ()
-  local line = parse_tokens(jieba.lcut(vim.api.nvim_get_current_line()))
+  local line = parse_tokens(jieba.lcut(vim.api.nvim_get_current_line(), false, true))
   line = stack_merge(line, insert_implicit_space_rule)
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
   local _, start, row = index_tokens(line, cursor_pos[2])
