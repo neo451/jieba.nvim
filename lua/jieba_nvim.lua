@@ -453,7 +453,7 @@ local update_lines = function()
 	Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 end
 
-vim.api.nvim_create_autocmd({ "InsertLeave" }, { callback = update_lines })
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged", "TextChangedI" }, { callback = update_lines })
 
 M.wordmotion_b = function()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
