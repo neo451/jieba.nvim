@@ -4,8 +4,6 @@ local ut = require("jb_utils")
 local pat_space = "%s+" -- 空格
 
 -- 卡壳问题
--- hmm 会把"test = parse"这样的的情况判断为hans: test = par 和 se
--- 暂不用
 -- TokenType Enum
 TokenType = { hans = 1, punc = 2, space = 3, non_word = 4 }
 
@@ -453,7 +451,7 @@ local update_lines = function()
 	Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 end
 
-vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged", "TextChangedI" }, { callback = update_lines })
+vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged", "TextChangedI", "BufEnter" }, { callback = update_lines })
 
 M.wordmotion_b = function()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
