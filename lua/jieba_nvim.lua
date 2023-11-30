@@ -503,7 +503,7 @@ end
 --   vim.go.operatorfunc = "v:lua.require'jieba_nvim'.dw_callback"
 --   return vim.cmd("normal! g@l")
 -- end
-local dot = require("tools")
+-- local dot = require("tools")
 M.change_w = function()
 	M.delete_w()
 	vim.cmd("startinsert")
