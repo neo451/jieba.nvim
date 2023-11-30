@@ -37,10 +37,6 @@ local parse_tokens = function(tokens)
 	return parsed
 end
 
-ins = function (sen)
-  print(vim.inspect(sen)) 
-end
-
 local function _gen_implicit_space_in_between(parsed_tok2)
 	local i2 = parsed_tok2.i
 	return { i = i2, j = i2 - 1, t = TokenType.space }
@@ -121,7 +117,7 @@ local function index_tokens(parsed_tokens, bi)
 	for ti = #parsed_tokens, 1, -1 do
 		if parsed_tokens[ti].i <= bi then
 			return ti, parsed_tokens[ti].i, parsed_tokens[ti].j
-    end
+		end
 	end
 	error("token index of byte index " .. bi .. " not found in parsed tokens")
 end
@@ -507,27 +503,50 @@ end
 --   vim.go.operatorfunc = "v:lua.require'jieba_nvim'.dw_callback"
 --   return vim.cmd("normal! g@l")
 -- end
-
+local dot = require("tools")
 M.change_w = function()
-  M.delete_w()
-  vim.cmd("startinsert")
+	M.delete_w()
+	vim.cmd("startinsert")
 end
 
-M.delete_w = function ()
-  M.select_w()
-  vim.cmd("normal d")
-  update_lines()
+M.delete_w = function()
+	M.select_w()
+	vim.cmd("normal d")
+	update_lines()
 end
 
-M.select_w = function ()
-  local line = parse_tokens(jieba.lcut(vim.api.nvim_get_current_line(), false, true))
-  line = stack_merge(line, insert_implicit_space_rule)
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  local _, start, row = index_tokens(line, cursor_pos[2])
-  vim.api.nvim_cmd({ cmd = "normal", bang = true, args = { 'v' } }, {})
-  vim.api.nvim_win_set_cursor(0, { cursor_pos[1], start})
-  vim.cmd "normal! o"
-  vim.api.nvim_win_set_cursor(0, { cursor_pos[1], row})
+M.select_w = function()
+	local line = parse_tokens(jieba.lcut(vim.api.nvim_get_current_line(), false, true))
+	line = stack_merge(line, insert_implicit_space_rule)
+	local cursor_pos = vim.api.nvim_win_get_cursor(0)
+	local _, start, row = index_tokens(line, cursor_pos[2])
+	vim.api.nvim_cmd({ cmd = "normal", bang = true, args = { "v" } }, {})
+	vim.api.nvim_win_set_cursor(0, { cursor_pos[1], start })
+	vim.cmd("normal! o")
+	vim.api.nvim_win_set_cursor(0, { cursor_pos[1], row })
 end
+
+-- local function high(line, start, stop)
+-- 	local bufnr = vim.api.nvim_get_current_buf()
+-- 	print(bufnr)
+-- 	-- Define the highlight group and attributes
+-- 	local hl_group = "MyHighlightGroup"
+-- 	local hl_color = "#ff0000" -- 这里使用的是红色（#ff0000）
+-- 	-- Define the start and end positions
+-- 	vim.cmd("highlight " .. hl_group .. " guifg=" .. hl_color)
+-- 	-- Add the highlight to the buffer
+-- 	vim.api.nvim_buf_add_highlight(bufnr, -1, hl_group, line, start, stop)
+-- end
+
+-- TODO: 高亮当前光标下的词
+-- local function hightlight_under_curosr()
+-- 	local line = parse_tokens(jieba.lcut(vim.api.nvim_get_current_line(), false, true))
+-- 	line = stack_merge(line, insert_implicit_space_rule)
+-- 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
+-- 	local _, start, row = index_tokens(line, cursor_pos[2] + 1)
+--   high(cursor_pos[1] - 1, start, row)
+-- end
+--
+-- vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, { callback = hightlight_under_curosr })
 
 return M

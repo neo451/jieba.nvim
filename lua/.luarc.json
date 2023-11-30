@@ -4,5 +4,6 @@
         "/usr/share/nvim/runtime/lua",
         "/home/n451/Plugins/jieba.nvim/lua",
         "${3rd}/luv/library"
-    ]
+    ],
+    "workspace.checkThirdParty": false
 }
