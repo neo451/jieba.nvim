@@ -1,6 +1,7 @@
 local M = {}
 local jieba = require("jieba")
-local ut = require("jb_utils")
+local ut = require("jieba.utils")
+local utf8 = require("jieba.utf8")
 local pat_space = "%s+" -- 空格
 
 -- 卡壳问题
@@ -31,7 +32,7 @@ local parse_tokens = function(tokens)
 		local i = cum_l
 		local t = get_token_type(tok)
 		cum_l = cum_l + #tok
-		local j = cum_l - #ut.sub(tok, ut.len(tok), ut.len(tok))
+		local j = cum_l - #ut.sub(tok, utf8.len(tok), utf8.len(tok))
 		table.insert(parsed, { i = i, j = j, t = t })
 	end
 	return parsed
@@ -498,27 +499,29 @@ M.wordmotion_gE = function()
 	vim.api.nvim_win_set_cursor(0, pos)
 end
 
--- M.delete_w = function()
---   M.dw_callback()
---   vim.go.operatorfunc = "v:lua.require'jieba_nvim'.dw_callback"
---   return vim.cmd("normal! g@l")
--- end
--- local dot = require("tools")
 M.change_w = function()
 	M.delete_w()
 	vim.cmd("startinsert")
 end
 
-M.delete_w = function()
+M.delete_w_callback = function()
 	M.select_w()
 	vim.cmd("normal d")
 	update_lines()
 end
 
+M.delete_w = function()
+	M.delete_w_callback()
+	vim.o.operatorfunc = "v:lua.require'jieba_nvim'.delete_w_callback()"
+	return vim.cmd("normal! g@l")
+end
+
 M.select_w = function()
-	local line = parse_tokens(jieba.lcut(vim.api.nvim_get_current_line(), false, true))
-	line = stack_merge(line, insert_implicit_space_rule)
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
+	local current_line = Lines[cursor_pos[1]]
+	local line = parse_tokens(jieba.lcut(current_line, false, true))
+	print(line)
+	line = stack_merge(line, insert_implicit_space_rule)
 	local _, start, row = index_tokens(line, cursor_pos[2])
 	vim.api.nvim_cmd({ cmd = "normal", bang = true, args = { "v" } }, {})
 	vim.api.nvim_win_set_cursor(0, { cursor_pos[1], start })
