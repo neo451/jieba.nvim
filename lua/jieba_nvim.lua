@@ -2,38 +2,48 @@ local M = {}
 local jieba = require("jieba")
 local ut = require("jieba.utils")
 local utf8 = require("jieba.utf8")
-local pat_space = "%s+" -- 空格
 
--- 卡壳问题
+local str_match = string.match
+local sub = ut.sub
+local len = utf8.len
+
+local lpeg = vim.lpeg
+local C, S, utfR, R = lpeg.C, lpeg.S, lpeg.utfR, lpeg.R
+local hans = C(utfR(0x4E00, 0x9FFF) ^ 1) -- 0x9FA5?
+local engs = C(R("az", "AZ") ^ 1)
+local nums = C(R("09") ^ 1)
+local half_punc = C(S("·.,;!?()[]{}+-=_!@#$%^&*~`'\"<>:|\\")) ^ 1
+local full_punc = C(utfR(0x3000, 0x303F) + utfR(0xFF01, 0xFF5E) + utfR(0x2000, 0x206F)) ^ 1 -- 0xFF01 to 0xFF5E
+
 -- TokenType Enum
 TokenType = { hans = 1, punc = 2, space = 3, non_word = 4 }
 
-local function get_token_type(token)
-	if not token or string.match(token, pat_space) then
+local function get_token_type(str)
+	if not str or str_match(str, "%s+") then
 		return TokenType.space
 	end
-	if ut.is_punctuation(token) then
+	if (half_punc + full_punc):match(str) then
 		return TokenType.punc
 	end
-	if ut.is_chinese(token) or string.match(token, "[a-zA-Z0-9]") then
+	if (nums + hans + engs):match(str) then
 		return TokenType.hans
 	end
 	return TokenType.non_word
 end
+M.get_token_type = get_token_type
 
-local parse_tokens = function(tokens)
-	-- Parse each token as a table {i, j, t} such that i denotes the byte index of the first
-	-- character of the token, j denotes the byte index of the last character of the token,
-	-- t denotes the type of the token. If j is less than i, it means that the underlying
-	-- token is an empty string.
+-- Parse each token as a table {i, j, t} such that i denotes the byte index of the first
+-- character of the token, j denotes the byte index of the last character of the token,
+-- t denotes the type of the token. If j is less than i, it means that the underlying
+-- token is an empty string.
+local function parse_tokens(tokens)
 	local cum_l = 0
 	local parsed = {}
 	for _, tok in ipairs(tokens) do
 		local i = cum_l
-		local t = get_token_type(tok)
 		cum_l = cum_l + #tok
-		local j = cum_l - #ut.sub(tok, utf8.len(tok), utf8.len(tok))
-		table.insert(parsed, { i = i, j = j, t = t })
+		local j = cum_l - #sub(tok, len(tok), len(tok))
+		parsed[#parsed + 1] = { i = i, j = j, t = get_token_type(tok) }
 	end
 	return parsed
 end
@@ -47,7 +57,7 @@ local function insert_implicit_space_rule(parsed_tok1, parsed_tok2)
 	if parsed_tok1 == nil then
 		return nil
 	end
-	local to_insert_table = {
+	local rules = {
 		[TokenType.hans] = {
 			[TokenType.hans] = true,
 			[TokenType.punc] = false,
@@ -73,7 +83,7 @@ local function insert_implicit_space_rule(parsed_tok1, parsed_tok2)
 			[TokenType.non_word] = false,
 		},
 	}
-	local t1 = to_insert_table[parsed_tok1.t][parsed_tok2.t]
+	local t1 = rules[parsed_tok1.t][parsed_tok2.t]
 	if t1 then
 		local imp_space = _gen_implicit_space_in_between(parsed_tok2)
 		return { parsed_tok1, imp_space, parsed_tok2 }
@@ -81,32 +91,26 @@ local function insert_implicit_space_rule(parsed_tok1, parsed_tok2)
 	return nil
 end
 
-local function stack_merge(elements, rule_func)
+local function stack_merge(elements)
 	local stack = {}
 	for _, pt in ipairs(elements) do
-		-- Get last element from stack if possible, or use nil
-		local last_in_stack = nil
-		if #stack > 0 then
-			last_in_stack = stack[#stack]
-		end
-
-		local trans_pt_list = rule_func(last_in_stack, pt)
+		local trans_pt_list = insert_implicit_space_rule(stack[#stack], pt)
 		if trans_pt_list == nil then
 			-- Append to end of stack
-			table.insert(stack, pt)
+			stack[#stack + 1] = pt
 		elseif trans_pt_list[1] == nil then
 			-- Remove the first element from trans_pt_list
 			table.remove(trans_pt_list, 1)
 			-- Extend stack with trans_pt_list
 			for _, item in ipairs(trans_pt_list) do
-				table.insert(stack, item)
+				stack[#stack + 1] = item
 			end
 		else
 			-- Remove last element from stack
 			table.remove(stack)
 			-- Extend stack with trans_pt_list
 			for _, item in ipairs(trans_pt_list) do
-				table.insert(stack, item)
+				stack[#stack + 1] = item
 			end
 		end
 	end
@@ -369,8 +373,8 @@ local function index_next_end_of_WORD(parsed_tokens, ci)
 	return last_valid_j
 end
 
+-- determine the sentinel row and row step values based on the direction of movement
 local function navigate(primary_index_func, secondary_index_func, backward, buffer, cursor_pos)
-	-- -- determine the sentinel row and row step values based on the direction of movement
 	local sentinel_row, row_step, pt
 	if backward == true then
 		sentinel_row = 1
@@ -379,11 +383,11 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		sentinel_row = #buffer
 		row_step = 1
 	end
-	-- -- unwrap the row and col from the cursor position
+	-- unwrap the row and col from the cursor position
 	local row, col = cursor_pos[1], cursor_pos[2]
 	if row == sentinel_row then
-		pt = parse_tokens(jieba.lcut(buffer[row], false, true))
-		pt = stack_merge(pt, insert_implicit_space_rule)
+		pt = parse_tokens(jieba.lcut(buffer[row], false, false))
+		pt = stack_merge(pt)
 		col = primary_index_func(pt, col)
 
 		if col == nil then
@@ -405,24 +409,24 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		return { row, col }
 	end
 	-- similar steps for when row is not the sentinel_row
-	pt = parse_tokens(jieba.lcut(buffer[row], false, true))
-	pt = stack_merge(pt, insert_implicit_space_rule)
+	pt = parse_tokens(jieba.lcut(buffer[row], false, false))
+	pt = stack_merge(pt)
 	col = primary_index_func(pt, col)
 	if col ~= nil then
 		return { row, col }
 	end
 	row = row + row_step
 	while row ~= sentinel_row do
-		pt = parse_tokens(jieba.lcut(buffer[row], false, true))
-		pt = stack_merge(pt, insert_implicit_space_rule)
+		pt = parse_tokens(jieba.lcut(buffer[row], false, false))
+		pt = stack_merge(pt)
 		col = secondary_index_func(pt)
 		if col ~= nil then
 			return { row, col }
 		end
 		row = row + row_step
 	end
-	pt = parse_tokens(jieba.lcut(buffer[row], false, true))
-	pt = stack_merge(pt, insert_implicit_space_rule)
+	pt = parse_tokens(jieba.lcut(buffer[row], false, false))
+	pt = stack_merge(pt)
 	col = secondary_index_func(pt)
 	if col == nil then
 		if backward == true then
@@ -521,7 +525,7 @@ M.select_w = function()
 	local current_line = Lines[cursor_pos[1]]
 	local line = parse_tokens(jieba.lcut(current_line, false, true))
 	print(line)
-	line = stack_merge(line, insert_implicit_space_rule)
+	line = stack_merge(line)
 	local _, start, row = index_tokens(line, cursor_pos[2])
 	vim.api.nvim_cmd({ cmd = "normal", bang = true, args = { "v" } }, {})
 	vim.api.nvim_win_set_cursor(0, { cursor_pos[1], start })
@@ -544,7 +548,7 @@ end
 -- TODO: 高亮当前光标下的词
 -- local function hightlight_under_curosr()
 -- 	local line = parse_tokens(jieba.lcut(vim.api.nvim_get_current_line(), false, true))
--- 	line = stack_merge(line, insert_implicit_space_rule)
+-- 	line = stack_merge(line)
 -- 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 -- 	local _, start, row = index_tokens(line, cursor_pos[2] + 1)
 --   high(cursor_pos[1] - 1, start, row)
