@@ -523,7 +523,7 @@ end
 M.select_w = function()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 	local current_line = Lines[cursor_pos[1]]
-	local line = parse_tokens(jieba.lcut(current_line, false, true))
+	local line = parse_tokens(jieba.lcut(current_line, false, false))
 	print(line)
 	line = stack_merge(line)
 	local _, start, row = index_tokens(line, cursor_pos[2])
