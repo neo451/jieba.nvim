@@ -1,6 +1,6 @@
 # jieba.nvim
 
-基于结巴中文分词的单词跳转，基于[jieba-lua](https://github.com/noearc/jieba-lua), 好处是比原版 jieba 快, 但并不会比采用 cppjieba 的 jieba.nvim 快, 不过完全够用, 且不需要本地编译，插件逻辑来自[vim.jieba](https://github.com/kkew3/jieba.vim)
+基于结巴中文分词的单词跳转，基于[jieba-lua](https://github.com/noearc/jieba-lua), 好处是比原版 jieba 快, 但并不会比采用 cppjieba 的 jieba.nvim 快, 不过完全够用, 且不需要本地编译，插件逻辑来自[jieba.vim](https://github.com/kkew3/jieba.vim)
 
 ## 安装
 
