@@ -21,9 +21,10 @@ end
 ---@param hmm boolean
 ---@return string[]
 local function cut(str, hmm)
-    return require 'jieba'.cut(str, hmm, jieba_path)
+    return require 'jieba'.cut(str, hmm)
 end
 
 return {
+    jieba_path = jieba_path,
     cut = cut
 }

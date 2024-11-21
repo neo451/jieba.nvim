@@ -2,7 +2,7 @@
 
 #include "jieba.h"
 
-static int _cut(lua_State *L) {
+static int _init(lua_State *L) {
   struct jieba_path jieba_path;
   lua_getfield(L, 3, "dict_path");
   jieba_path.dict_path = lua_tostring(L, -1);
@@ -14,8 +14,13 @@ static int _cut(lua_State *L) {
   jieba_path.idf_path = lua_tostring(L, -1);
   lua_getfield(L, 3, "stop_word_path");
   jieba_path.stop_word_path = lua_tostring(L, -1);
+  init(jieba_path);
+  return 0;
+}
+
+static int _cut(lua_State *L) {
   lua_newtable(L);
-  char **results = cut(lua_tostring(L, 1), lua_toboolean(L, 2), jieba_path);
+  char **results = cut(lua_tostring(L, 1), lua_toboolean(L, 2));
   int i = 1;
   while (*results) {
     lua_pushstring(L, *results++);
@@ -25,6 +30,7 @@ static int _cut(lua_State *L) {
 }
 
 static const luaL_Reg functions[] = {
+    {"init", _init},
     {"cut", _cut},
     {NULL, NULL},
 };

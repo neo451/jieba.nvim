@@ -11,7 +11,8 @@ struct jieba_path {
   const char *idf_path;
   const char *stop_word_path;
 };
-char **cut(const char *str, bool hmm, struct jieba_path);
+void init(struct jieba_path);
+char **cut(const char *str, bool hmm);
 
 __END_DECLS
 #endif /* jieba.h */
