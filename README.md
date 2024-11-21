@@ -1,34 +1,38 @@
 # jieba.nvim
 
-基于结巴中文分词的单词跳转，基于[jieba-lua](https://github.com/noearc/jieba-lua), 好处是比原版 jieba 快, 但并不会比采用 cppjieba 的 jieba.nvim 快, 不过完全够用, 且不需要本地编译，插件逻辑来自[jieba.vim](https://github.com/kkew3/jieba.vim)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Freed-Wu/jieba.nvim/main.svg)](https://results.pre-commit.ci/latest/github/Freed-Wu/jieba.nvim/main)
+[![github/workflow](https://github.com/Freed-Wu/jieba.nvim/actions/workflows/main.yml/badge.svg)](https://github.com/Freed-Wu/jieba.nvim/actions)
 
-## 安装
+[![github/downloads](https://shields.io/github/downloads/Freed-Wu/jieba.nvim/total)](https://github.com/Freed-Wu/jieba.nvim/releases)
+[![github/downloads/latest](https://shields.io/github/downloads/Freed-Wu/jieba.nvim/latest/total)](https://github.com/Freed-Wu/jieba.nvim/releases/latest)
+[![github/issues](https://shields.io/github/issues/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/issues)
+[![github/issues-closed](https://shields.io/github/issues-closed/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/issues?q=is%3Aissue+is%3Aclosed)
+[![github/issues-pr](https://shields.io/github/issues-pr/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/pulls)
+[![github/issues-pr-closed](https://shields.io/github/issues-pr-closed/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/pulls?q=is%3Apr+is%3Aclosed)
+[![github/discussions](https://shields.io/github/discussions/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/discussions)
+[![github/milestones](https://shields.io/github/milestones/all/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/milestones)
+[![github/forks](https://shields.io/github/forks/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/network/members)
+[![github/stars](https://shields.io/github/stars/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/stargazers)
+[![github/watchers](https://shields.io/github/watchers/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/watchers)
+[![github/contributors](https://shields.io/github/contributors/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/graphs/contributors)
+[![github/commit-activity](https://shields.io/github/commit-activity/w/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/graphs/commit-activity)
+[![github/last-commit](https://shields.io/github/last-commit/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/commits)
+[![github/release-date](https://shields.io/github/release-date/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/releases/latest)
 
-lazy.nvim:
+[![github/license](https://shields.io/github/license/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/blob/main/LICENSE)
+[![github/languages](https://shields.io/github/languages/count/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
+[![github/languages/top](https://shields.io/github/languages/top/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
+[![github/directory-file-count](https://shields.io/github/directory-file-count/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
+[![github/code-size](https://shields.io/github/languages/code-size/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
+[![github/repo-size](https://shields.io/github/repo-size/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
+[![github/v](https://shields.io/github/v/release/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
 
-```
-{'noearc/jieba.nvim', dependencies = {'noearc/jieba-lua'}, opts = {} },
-```
+[![luarocks](https://img.shields.io/luarocks/v/Freed-Wu/jieba.nvim)](https://luarocks.org/modules/Freed-Wu/jieba.nvim)
 
-## 设置
+An experiment to use C/C++ to realize Chinese w/b/e/ge.
 
-默认 keymap, 强化了 neovim 的 b, w, e, ge, 暂无数字修饰
+## Related Projects
 
-```lua
-vim.keymap.set({'x', 'n'}, 'B', '<cmd>lua require("jieba_nvim").wordmotion_B()<CR>', {noremap = false, silent = true})
-vim.keymap.set({'x', 'n'}, 'b', '<cmd>lua require("jieba_nvim").wordmotion_b()<CR>', {noremap = false, silent = true})
-vim.keymap.set({'x', 'n'}, 'w', '<cmd>lua require("jieba_nvim").wordmotion_w()<CR>', {noremap = false, silent = true})
-vim.keymap.set({'x', 'n'}, 'W', '<cmd>lua require("jieba_nvim").wordmotion_W()<CR>', {noremap = false, silent = true})
-vim.keymap.set({'x', 'n'}, 'E', '<cmd>lua require("jieba_nvim").wordmotion_E()<CR>', {noremap = false, silent = true})
-vim.keymap.set({'x', 'n'}, 'e', '<cmd>lua require("jieba_nvim").wordmotion_e()<CR>', {noremap = false, silent = true})
-vim.keymap.set({'x', 'n'}, 'ge', '<cmd>lua require("jieba_nvim").wordmotion_ge()<CR>', {noremap = false, silent = true})
-vim.keymap.set({'x', 'n'}, 'gE', '<cmd>lua require("jieba_nvim").wordmotion_gE()<CR>', {noremap = false, silent = true})
-```
-
-可选 keymap, 模拟了 neovim 的 text object w, 可调用以下三个函数, 具体 keymap 可根据偏好自行添加
-
-```lua
-vim.keymap.set('n', 'ce', ":lua require'jieba_nvim'.change_w()<CR>", {noremap = false, silent = true})
-vim.keymap.set('n', 'de', ":lua require'jieba_nvim'.delete_w()<CR>",  {noremap = false, silent = true})
-vim.keymap.set('n', '<leader>w' , ":lua require'jieba_nvim'.select_w()<CR>", {noremap = false, silent = true})
-```
+- [coc-ci](https://github.com/fannheyward/coc-ci): written in javascript
+- [jieba.vim](https://github.com/kkew3/jieba.vim): written in python
+- [jieba.nvim](https://github.com/neo451/jieba.nvim): written in lua
