@@ -24,6 +24,8 @@ local M = {}
 local jieba = require("jieba.nvim.utils")
 local ut = require("jieba.utils")
 
+require("jieba").init(jieba.jieba_path)
+
 local str_match = string.match
 local sub = ut.sub
 local len = vim.api.nvim_strwidth
