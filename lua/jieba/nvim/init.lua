@@ -1,19 +1,32 @@
+-- luacheck: ignore 112 113
+---@diagnostic disable: undefined-global
 -- This code snippet is taken from [kkew3/jieba.vim] and is licensed under the MIT License.
 -- Original License Text:
 -- MIT License
 -- Copyright 2023 Kaiwen Wu
--- Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
--- The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--- THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-- Permission is hereby granted, free of charge, to any person obtaining a copy
+-- of this software and associated documentation files (the “Software”), to deal
+-- in the Software without restriction, including without limitation the rights
+-- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-- copies of the Software, and to permit persons to whom the Software is
+-- furnished to do so, subject to the following conditions:
+-- The above copyright notice and this permission notice shall be included in
+-- all copies or substantial portions of the Software.
+-- THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-- IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-- AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-- LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+-- SOFTWARE.
 
 local M = {}
-local jieba = require("jieba")
+local jieba = require("jieba.nvim.utils")
 local ut = require("jieba.utils")
-local utf8 = require("jieba.utf8")
 
 local str_match = string.match
 local sub = ut.sub
-local len = utf8.len
+local len = vim.api.nvim_strwidth
 
 local lpeg = vim.lpeg
 local C, S, utfR, R = lpeg.C, lpeg.S, lpeg.utfR, lpeg.R
@@ -24,7 +37,7 @@ local half_punc = C(S("·.,;!?()[]{}+-=_!@#$%^&*~`'\"<>:|\\")) ^ 1
 local full_punc = C(utfR(0x3000, 0x303F) + utfR(0xFF01, 0xFF5E) + utfR(0x2000, 0x206F)) ^ 1 -- 0xFF01 to 0xFF5E
 
 -- TokenType Enum
-TokenType = { hans = 1, punc = 2, space = 3, non_word = 4 }
+local TokenType = { hans = 1, punc = 2, space = 3, non_word = 4 }
 
 local function get_token_type(str)
 	if not str or str_match(str, "%s+") then
@@ -394,7 +407,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	-- unwrap the row and col from the cursor position
 	local row, col = cursor_pos[1], cursor_pos[2]
 	if row == sentinel_row then
-		pt = parse_tokens(jieba.lcut(buffer[row], false, false))
+		pt = parse_tokens(jieba.cut(buffer[row], true))
 		pt = stack_merge(pt)
 		col = primary_index_func(pt, col)
 
@@ -417,7 +430,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		return { row, col }
 	end
 	-- similar steps for when row is not the sentinel_row
-	pt = parse_tokens(jieba.lcut(buffer[row], false, false))
+	pt = parse_tokens(jieba.cut(buffer[row], true))
 	pt = stack_merge(pt)
 	col = primary_index_func(pt, col)
 	if col ~= nil then
@@ -425,7 +438,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	end
 	row = row + row_step
 	while row ~= sentinel_row do
-		pt = parse_tokens(jieba.lcut(buffer[row], false, false))
+		pt = parse_tokens(jieba.cut(buffer[row], true))
 		pt = stack_merge(pt)
 		col = secondary_index_func(pt)
 		if col ~= nil then
@@ -433,7 +446,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		end
 		row = row + row_step
 	end
-	pt = parse_tokens(jieba.lcut(buffer[row], false, false))
+	pt = parse_tokens(jieba.cut(buffer[row], true))
 	pt = stack_merge(pt)
 	col = secondary_index_func(pt)
 	if col == nil then
@@ -454,7 +467,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	return { row, col }
 end
 
-Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
+local Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
 
 local update_lines = function()
 	Lines = vim.api.nvim_buf_get_lines(0, 0, -1, true)
@@ -531,7 +544,7 @@ end
 M.select_w = function()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 	local current_line = Lines[cursor_pos[1]]
-	local line = parse_tokens(jieba.lcut(current_line, false, false))
+	local line = parse_tokens(jieba.cut(current_line, true))
 	print(line)
 	line = stack_merge(line)
 	local _, start, row = index_tokens(line, cursor_pos[2])
@@ -555,7 +568,7 @@ end
 
 -- TODO: 高亮当前光标下的词
 -- local function hightlight_under_curosr()
--- 	local line = parse_tokens(jieba.lcut(vim.api.nvim_get_current_line(), false, true))
+-- 	local line = parse_tokens(jieba.cut(vim.api.nvim_get_current_line(), false, true))
 -- 	line = stack_merge(line)
 -- 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 -- 	local _, start, row = index_tokens(line, cursor_pos[2] + 1)

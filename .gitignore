@@ -1,0 +1,10 @@
+/cppjieba/
+/lua/jieba/dict/
+
+*.out
+compile_commands.json
+
+/output/
+build/
+.cache/
+.xmake/
