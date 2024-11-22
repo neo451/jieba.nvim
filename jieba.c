@@ -18,20 +18,29 @@ static int _init(lua_State *L) {
   return 0;
 }
 
+static int _deinit(lua_State *L) {
+  deinit();
+  return 0;
+}
+
 static int _cut(lua_State *L) {
   lua_newtable(L);
   char **results = cut(lua_tostring(L, 1), lua_toboolean(L, 2));
+  char **p = results;
   int i = 1;
-  while (*results) {
-    lua_pushstring(L, *results++);
+  while (*p) {
+    lua_pushstring(L, *p);
     lua_rawseti(L, -2, i++);
+    free(*p++);
   }
+  free(results);
   return 1;
 }
 
 static const luaL_Reg functions[] = {
     {"init", _init},
     {"cut", _cut},
+    {"deinit", _deinit},
     {NULL, NULL},
 };
 

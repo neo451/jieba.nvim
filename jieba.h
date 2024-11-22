@@ -13,6 +13,7 @@ struct jieba_path {
 };
 void init(struct jieba_path);
 char **cut(const char *str, bool hmm);
+void deinit();
 
 __END_DECLS
 #endif /* jieba.h */
