@@ -24,7 +24,10 @@ local M = {}
 local jieba = require("jieba.nvim.utils")
 local ut = require("jieba.utils")
 
-require("jieba").init(jieba.jieba_path)
+if jieba.is_init == nil then
+	require("jieba").init(jieba.jieba_path)
+	jieba.is_init = true
+end
 
 local str_match = string.match
 local sub = ut.sub

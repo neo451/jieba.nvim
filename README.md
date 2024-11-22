@@ -29,10 +29,84 @@
 
 [![luarocks](https://img.shields.io/luarocks/v/Freed-Wu/jieba.nvim)](https://luarocks.org/modules/Freed-Wu/jieba.nvim)
 
-An experiment to use C/C++ to realize Chinese w/b/e/ge.
+Use C/C++ to realize Chinese w/b/e/ge for neovim.
 
 ## Related Projects
 
 - [coc-ci](https://github.com/fannheyward/coc-ci): written in javascript
 - [jieba.vim](https://github.com/kkew3/jieba.vim): written in python
 - [jieba.nvim](https://github.com/neo451/jieba.nvim): written in lua
+
+## Install
+
+### rocks.nvim
+
+#### Command style
+
+```vim
+:Rocks install jieba.nvim
+```
+
+#### Declare style
+
+`~/.config/nvim/rocks.toml`:
+
+```toml
+[plugins]
+"jieba.nvim" = "scm"
+```
+
+Then
+
+```vim
+:Rocks sync
+```
+
+or:
+
+```sh
+$ luarocks --lua-version 5.1 --local --tree ~/.local/share/nvim/rocks install jieba.nvim
+# ~/.local/share/nvim/rocks is the default rocks tree path
+# you can change it according to your vim.g.rocks_nvim.rocks_path
+```
+
+## Configure
+
+### Keymap
+
+Be default, add keymaps for b/B/w/W/e/E/ge/gE. you can enable more:
+
+```lua
+vim.keymap.set("n", "ce", function()
+    require("jieba.nvim").wordmotion_change_w()
+end, { noremap = false, silent = true })
+vim.keymap.set("n", "de", function()
+    require("jieba.nvim").wordmotion_delete_w()
+end, { noremap = false, silent = true })
+vim.keymap.set("n", "viw", function()
+    require("jieba.nvim").wordmotion_select_w()
+end, { noremap = false, silent = true })
+```
+
+### Dictionary
+
+By default, it don't use any user dictionary. You can:
+
+```lua
+local jieba = require"jieba.nvim.utils"
+local jieba_path = jieba.jieba_path
+jieba_path.user_dict_path = "/the/path/of/my/user.dict.utf8"
+jieba.init(jieba_path)
+-- skip default init
+jieba.is_init = true
+```
+
+### HMM
+
+By default, HMM is enabled to provide higher precision. you can disable it to
+speed up.
+
+```lua
+local jieba = require"jieba.nvim.utils"
+jieba.hmm = false
+```
