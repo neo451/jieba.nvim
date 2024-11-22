@@ -412,7 +412,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	-- unwrap the row and col from the cursor position
 	local row, col = cursor_pos[1], cursor_pos[2]
 	if row == sentinel_row then
-		pt = parse_tokens(jieba.cut(buffer[row], true))
+		pt = parse_tokens(jieba.cut(buffer[row], jieba.hmm))
 		pt = stack_merge(pt)
 		col = primary_index_func(pt, col)
 
@@ -435,7 +435,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		return { row, col }
 	end
 	-- similar steps for when row is not the sentinel_row
-	pt = parse_tokens(jieba.cut(buffer[row], true))
+	pt = parse_tokens(jieba.cut(buffer[row], jieba.hmm))
 	pt = stack_merge(pt)
 	col = primary_index_func(pt, col)
 	if col ~= nil then
@@ -443,7 +443,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	end
 	row = row + row_step
 	while row ~= sentinel_row do
-		pt = parse_tokens(jieba.cut(buffer[row], true))
+		pt = parse_tokens(jieba.cut(buffer[row], jieba.hmm))
 		pt = stack_merge(pt)
 		col = secondary_index_func(pt)
 		if col ~= nil then
@@ -451,7 +451,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		end
 		row = row + row_step
 	end
-	pt = parse_tokens(jieba.cut(buffer[row], true))
+	pt = parse_tokens(jieba.cut(buffer[row], jieba.hmm))
 	pt = stack_merge(pt)
 	col = secondary_index_func(pt)
 	if col == nil then
@@ -549,7 +549,7 @@ end
 M.select_w = function()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 	local current_line = Lines[cursor_pos[1]]
-	local line = parse_tokens(jieba.cut(current_line, true))
+	local line = parse_tokens(jieba.cut(current_line, jieba.hmm))
 	print(line)
 	line = stack_merge(line)
 	local _, start, row = index_tokens(line, cursor_pos[2])
@@ -573,7 +573,7 @@ end
 
 -- TODO: 高亮当前光标下的词
 -- local function hightlight_under_curosr()
--- 	local line = parse_tokens(jieba.cut(vim.api.nvim_get_current_line(), false, true))
+-- 	local line = parse_tokens(jieba.cut(vim.api.nvim_get_current_line(), jieba.hmm))
 -- 	line = stack_merge(line)
 -- 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 -- 	local _, start, row = index_tokens(line, cursor_pos[2] + 1)
