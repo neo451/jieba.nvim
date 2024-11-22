@@ -34,7 +34,7 @@ Use C/C++ to realize Chinese w/b/e/ge for neovim.
 ## Related Projects
 
 - [coc-ci](https://github.com/fannheyward/coc-ci): based on
-  [segmentit](https://github.com/linonetwo/segmentit). Written in javascript.
+  [segmentit](https://github.com/linonetwo/segmentit). Written in nodejs.
 - [jieba.vim](https://github.com/kkew3/jieba.vim): based on
   [jieba](https://github.com/fxsjy/jieba). Written in python. Now they plan to
   use [jieba-rs](https://github.com/messense/jieba-rs) to speed up by rust.
@@ -43,6 +43,15 @@ Use C/C++ to realize Chinese w/b/e/ge for neovim.
 - [jieba_nvim](https://github.com/cathaysia/jieba_nvim): based on
   [cppjieba](https://github.com/yanyiwu/cppjieba). Written in C++. Stop
   maintenance. This project is a rewrite of it.
+
+## Similar Projects
+
+- [deno-bridge-jieba](https://github.com/ginqi7/deno-bridge-jieba): based on
+  [deno-jieba](https://github.com/wangbinyq/deno-jieba). Written in denojs use
+  and wasm.
+- [vscode-jieba](https://github.com/stephanoskomnenos/vscode-jieba): based on
+  [jieba-rs](https://github.com/messense/jieba-rs). Written in rust and use
+  wasm. Support Vim mode and Emacs mode.
 
 ## Install
 
