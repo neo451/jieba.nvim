@@ -25,6 +25,7 @@ local function cut(str, hmm)
 end
 
 return {
+    is_init = false,
     jieba_path = jieba_path,
     cut = cut
 }
