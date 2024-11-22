@@ -24,7 +24,7 @@ local M = {}
 local jieba = require("jieba.nvim.utils")
 local ut = require("jieba.utils")
 
-if jieba.is_init == nil then
+if not jieba.is_init then
 	require("jieba").init(jieba.jieba_path)
 	jieba.is_init = true
 end
