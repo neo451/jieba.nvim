@@ -4,15 +4,15 @@
 
 static int _init(lua_State *L) {
   struct jieba_path jieba_path;
-  lua_getfield(L, 3, "dict_path");
+  lua_getfield(L, 1, "dict_path");
   jieba_path.dict_path = lua_tostring(L, -1);
-  lua_getfield(L, 3, "model_path");
+  lua_getfield(L, 1, "model_path");
   jieba_path.model_path = lua_tostring(L, -1);
-  lua_getfield(L, 3, "user_dict_path");
+  lua_getfield(L, 1, "user_dict_path");
   jieba_path.user_dict_path = lua_tostring(L, -1);
-  lua_getfield(L, 3, "idf_path");
+  lua_getfield(L, 1, "idf_path");
   jieba_path.idf_path = lua_tostring(L, -1);
-  lua_getfield(L, 3, "stop_word_path");
+  lua_getfield(L, 1, "stop_word_path");
   jieba_path.stop_word_path = lua_tostring(L, -1);
   init(jieba_path);
   return 0;
