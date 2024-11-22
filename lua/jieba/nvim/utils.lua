@@ -26,6 +26,7 @@ end
 
 return {
     is_init = false,
+    hmm = true,
     jieba_path = jieba_path,
     cut = cut
 }
