@@ -7,7 +7,7 @@
 lazy.nvim:
 
 ```
-{'noearc/jieba.nvim', dependencies = {'noearc/jieba-lua'}},
+{'noearc/jieba.nvim', dependencies = {'noearc/jieba-lua'}, opts = {} },
 ```
 
 ## 设置
