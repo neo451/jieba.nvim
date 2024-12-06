@@ -16,6 +16,8 @@ description = {
   $license
 }
 
+build_dependencies = { "luarocks-build-xmake" }
+
 dependencies = $dependencies
 
 test_dependencies = $test_dependencies
