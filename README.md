@@ -106,23 +106,16 @@ end, { noremap = false, silent = true })
 
 ### Dictionary
 
-By default, it don't use any user dictionary. You can:
+By default, it doesn't use any user dictionary. You can:
 
 ```lua
-local jieba = require"jieba.nvim.utils"
-local jieba_path = jieba.jieba_path
-jieba_path.user_dict_path = "/the/path/of/my/user.dict.utf8"
-jieba.init(jieba_path)
--- skip default init
-jieba.is_init = true
+require"jieba.nvim.config".paths.user_dict_path = "/the/path/of/my/user.dict.utf8"
 ```
 
 ### HMM
 
-By default, HMM is enabled to provide higher precision. you can disable it to
-speed up.
+HMM can provide higher precision. You can disable it by:
 
 ```lua
-local jieba = require"jieba.nvim.utils"
-jieba.hmm = false
+require"jieba.nvim.config".hmm = false
 ```
