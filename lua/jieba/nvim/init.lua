@@ -21,7 +21,7 @@
 -- SOFTWARE.
 
 local M = {}
-local config = require("jieba.nvim.config")
+local config = require("jieba.config")
 local ut = require("jieba.utils")
 
 local jieba = require("jieba").jieba(config.paths.dict_path,
