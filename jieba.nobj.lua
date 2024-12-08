@@ -13,14 +13,11 @@ c_module "jieba" {
             c_method_call "void" "jieba_delete" {}
         },
         method "cut" {
-            -- https://github.com/Neopallium/LuaNativeObjects/issues/9
-            var_in {
-                "const char *", "str", "bool", "hmm?"
-            },
+            var_in { "const char *", "str" },
+            var_in { "bool", "hmm?" },
             var_out { "<any>", "words" },
             c_source [[
-                int hmm_idx3 = lua_toboolean(L, 3);
-                char **words = jieba_cut(${this}, ${str}, hmm_idx3);
+                char **words = jieba_cut(${this}, ${str}, ${hmm});
                 char **p = words;
                 int i = 1;
                 lua_newtable(L);
