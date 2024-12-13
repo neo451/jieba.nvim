@@ -1,5 +1,6 @@
--- luacheck: ignore 112 113
+--- copied from <https://github.com/neo451/jieba.nvim/>
 ---@diagnostic disable: undefined-global
+-- luacheck: ignore 112 113
 -- This code snippet is taken from [kkew3/jieba.vim] and is licensed under the MIT License.
 -- Original License Text:
 -- MIT License

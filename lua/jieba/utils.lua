@@ -1,3 +1,4 @@
+--- copied from <https://github.com/neo451/jieba.nvim/>
 local M = {}
 -- local utf8 = require("lua-utf8")
 -- local utf8 = require("jieba.utf8")

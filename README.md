@@ -1,5 +1,6 @@
 # jieba.nvim
 
+[![readthedocs](https://shields.io/readthedocs/jieba-nvim)](https://jieba-nvim.readthedocs.io)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Freed-Wu/jieba.nvim/main.svg)](https://results.pre-commit.ci/latest/github/Freed-Wu/jieba.nvim/main)
 [![github/workflow](https://github.com/Freed-Wu/jieba.nvim/actions/workflows/main.yml/badge.svg)](https://github.com/Freed-Wu/jieba.nvim/actions)
 
