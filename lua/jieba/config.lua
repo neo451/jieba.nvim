@@ -1,6 +1,8 @@
--- luacheck: ignore 112 113
+--- default config. See `lua vim.print(require"jieba.config")`.
 ---@diagnostic disable: undefined-global
+-- luacheck: ignore 112 113
 
+---get dirname
 ---@param dir string
 ---@return string
 local function dirname(dir)
@@ -11,6 +13,7 @@ local function dirname(dir)
     return result
 end
 
+---join two paths
 ---@param dir string
 ---@param file string
 ---@return string
@@ -21,6 +24,7 @@ local function joinpath(dir, file)
     return dir .. "/" .. file
 end
 
+---judge if OS is win32
 ---@return boolean
 local function has_win32()
     if vim then
@@ -35,12 +39,14 @@ local dict_dir = joinpath(
 )
 
 return {
+    --- if hmm is enabled
     hmm = true,
+    --- config for paths
     paths = {
-        dict_path = joinpath(dict_dir, "jieba.dict.utf8"),
-        model_path = joinpath(dict_dir, "hmm_model.utf8"),
-        user_dict_path = has_win32() and "nul" or "/dev/null",
-        idf_path = joinpath(dict_dir, "idf.utf8"),
-        stop_word_path = joinpath(dict_dir, "stop_words.utf8"),
+        dict_path = joinpath(dict_dir, "jieba.dict.utf8"), -- for dict
+        model_path = joinpath(dict_dir, "hmm_model.utf8"), -- for model
+        user_dict_path = has_win32() and "nul" or "/dev/null", -- for user dict
+        idf_path = joinpath(dict_dir, "idf.utf8"), -- for idf
+        stop_word_path = joinpath(dict_dir, "stop_words.utf8"), -- for stop words
     }
 }
