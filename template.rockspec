@@ -16,9 +16,7 @@ description = {
   $license
 }
 
--- https://github.com/Neopallium/LuaNativeObjects/issues/7
--- https://aur.archlinux.org/cgit/aur.git/tree/native-objects-scm-1.rockspec?h=lua-native-objects
-build_dependencies = { "luarocks-build-xmake" }
+build_dependencies = { "luarocks-build-xmake", "native-objects" }
 
 dependencies = $dependencies
 
