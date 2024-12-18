@@ -6,7 +6,7 @@ add_rules("mode.debug", "mode.release")
 target("jieba")
 do
     add_includedirs(".", "cppjieba/include", "cppjieba/deps/limonp/include")
-    add_rules("luarocks.module", "lua.native-object")
+    add_rules("luarocks.module", "lua.native-objects")
     add_files("*.cpp", "*.nobj.lua")
     add_links("stdc++")
     before_build(
