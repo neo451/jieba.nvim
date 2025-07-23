@@ -7,6 +7,7 @@ add_requires("cppjieba")
 
 target("jieba")
 do
+    add_includedirs("$(curdir)")
     add_rules("lua.module", "lua.native-objects")
     add_files("*.cc", "*.nobj.lua")
     add_links("stdc++")
