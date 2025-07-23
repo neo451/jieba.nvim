@@ -25,6 +25,13 @@ local M = {}
 local config = require("jieba.config")
 local ut = require("jieba.utils")
 
+for _, path in ipairs{config.paths.dict_path,
+		config.paths.model_path, config.paths.user_dict_path,
+		config.paths.idf_path, config.paths.stop_word_path} do
+	if vim.fn.filereadable(path) == 0 then
+		return
+	end
+end
 local jieba = require("jieba").jieba(config.paths.dict_path,
 	config.paths.model_path, config.paths.user_dict_path,
 	config.paths.idf_path, config.paths.stop_word_path)
