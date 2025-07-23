@@ -1,4 +1,5 @@
-#include "cppjieba/Jieba.hpp"
+#include <cppjieba/Jieba.hpp>
+
 #include "jieba.h"
 
 #define DEFAULT_BUFFER_SIZE 1024
