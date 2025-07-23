@@ -9,6 +9,8 @@ mkShell {
     stdenv.cc
     pkg-config
     xmake
+    cmake
+    ninja
 
     (luajit.withPackages (
       p: with p; [
