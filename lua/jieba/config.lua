@@ -43,10 +43,10 @@ return {
     hmm = true,
     --- config for paths
     paths = {
-        dict_path = joinpath(dict_dir, "jieba.dict.utf8"), -- for dict
-        model_path = joinpath(dict_dir, "hmm_model.utf8"), -- for model
-        user_dict_path = has_win32() and "nul" or "/dev/null", -- for user dict
-        idf_path = joinpath(dict_dir, "idf.utf8"), -- for idf
+        dict_path = joinpath(dict_dir, "jieba.dict.utf8"),      -- for dict
+        model_path = joinpath(dict_dir, "hmm_model.utf8"),      -- for model
+        user_dict_path = has_win32() and "nul" or "/dev/null",  -- for user dict
+        idf_path = joinpath(dict_dir, "idf.utf8"),              -- for idf
         stop_word_path = joinpath(dict_dir, "stop_words.utf8"), -- for stop words
     }
 }

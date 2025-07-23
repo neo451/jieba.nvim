@@ -1,3 +1,6 @@
+if require("jieba.nvim") == nil then
+    return
+end
 -- luacheck: ignore 112 113
 ---@diagnostic disable: undefined-global
 vim.keymap.set("n", "b", function()
