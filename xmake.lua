@@ -12,29 +12,11 @@ do
     add_files("*.cc", "*.nobj.lua")
     add_links("stdc++")
     add_packages("cppjieba")
-    before_build(
-    -- luacheck: ignore 212/target
-    ---@diagnostic disable-next-line: unused-local
+    before_install(
         function(target)
-            ---@diagnostic disable: undefined-field
-            -- luacheck: ignore 143
-            if not os.isdir("lua/jieba/dict") then
-                import("net.http")
-                import("utils.archive")
-
-                local version = "5.6.0"
-                local url = "https://github.com/yanyiwu/cppjieba/archive/v" .. version .. ".zip"
-                local zip = path.filename(url)
-                os.tryrm(zip)
-                http.download(url, zip)
-                local sourcedir = "cppjieba-" .. version
-                os.tryrm(sourcedir)
-                if archive.extract(zip, ".") then
-                    os.mv(sourcedir .. "/dict", "lua/jieba")
-                end
-                os.tryrm(sourcedir)
-                os.tryrm(zip)
-            end
+            local prefix = target:pkg("cppjieba"):installdir()
+            -- https://github.com/xmake-io/luarocks-build-xmake/issues/6
+            target:add("installfiles", path.join(prefix, "share/cppjieba/(**)"), { prefixdir = "../lua/jieba" })
         end
     )
 end
