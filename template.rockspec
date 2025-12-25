@@ -18,7 +18,7 @@ description = {
 
 build_dependencies = { "luanativeobjects" }
 
-dependencies = $dependencies
+dependencies = {"lua >= 5.1", "vim"}
 
 test_dependencies = $test_dependencies
 
