@@ -22,22 +22,16 @@
 -- SOFTWARE.
 
 local M = {}
-local config = require("jieba.config")
 local ut = require("jieba.utils")
 
-for _, path in ipairs{config.paths.dict_path,
-		config.paths.model_path, config.paths.user_dict_path,
-		config.paths.idf_path, config.paths.stop_word_path} do
-	if vim.fn.filereadable(path) == 0 then
-		return
-	end
-end
-local jieba = require("jieba").jieba(config.paths.dict_path,
-	config.paths.model_path, config.paths.user_dict_path,
-	config.paths.idf_path, config.paths.stop_word_path)
 local str_match = string.match
 local sub = ut.sub
 local len = vim.api.nvim_strwidth
+
+local jieba = require("jieba.jieba").Jieba()
+if jieba == nil then
+	return
+end
 
 local lpeg = vim.lpeg
 local C, S, utfR, R = lpeg.C, lpeg.S, lpeg.utfR, lpeg.R
@@ -418,7 +412,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	-- unwrap the row and col from the cursor position
 	local row, col = cursor_pos[1], cursor_pos[2]
 	if row == sentinel_row then
-		pt = parse_tokens(jieba:cut(buffer[row], config.hmm))
+		pt = parse_tokens(jieba:cut(buffer[row]))
 		pt = stack_merge(pt)
 		col = primary_index_func(pt, col)
 
@@ -441,7 +435,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		return { row, col }
 	end
 	-- similar steps for when row is not the sentinel_row
-	pt = parse_tokens(jieba:cut(buffer[row], config.hmm))
+	pt = parse_tokens(jieba:cut(buffer[row]))
 	pt = stack_merge(pt)
 	col = primary_index_func(pt, col)
 	if col ~= nil then
@@ -449,7 +443,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 	end
 	row = row + row_step
 	while row ~= sentinel_row do
-		pt = parse_tokens(jieba:cut(buffer[row], config.hmm))
+		pt = parse_tokens(jieba:cut(buffer[row]))
 		pt = stack_merge(pt)
 		col = secondary_index_func(pt)
 		if col ~= nil then
@@ -457,7 +451,7 @@ local function navigate(primary_index_func, secondary_index_func, backward, buff
 		end
 		row = row + row_step
 	end
-	pt = parse_tokens(jieba:cut(buffer[row], config.hmm))
+	pt = parse_tokens(jieba:cut(buffer[row]))
 	pt = stack_merge(pt)
 	col = secondary_index_func(pt)
 	if col == nil then
@@ -555,7 +549,7 @@ end
 M.select_w = function()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 	local current_line = Lines[cursor_pos[1]]
-	local line = parse_tokens(jieba:cut(current_line, config.hmm))
+	local line = parse_tokens(jieba:cut(current_line))
 	print(line)
 	line = stack_merge(line)
 	local _, start, row = index_tokens(line, cursor_pos[2])
@@ -579,7 +573,7 @@ end
 
 -- TODO: 高亮当前光标下的词
 -- local function hightlight_under_curosr()
--- 	local line = parse_tokens(jieba:cut(vim.api.nvim_get_current_line(), config.hmm))
+-- 	local line = parse_tokens(jieba:cut(vim.api.nvim_get_current_line()))
 -- 	line = stack_merge(line)
 -- 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
 -- 	local _, start, row = index_tokens(line, cursor_pos[2] + 1)
