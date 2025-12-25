@@ -7,16 +7,13 @@ do
     set_homepage("https://github.com/yanyiwu/limonp")
     set_description("C++ headers(hpp) library with Python style")
 
-    set_urls("https://github.com/yanyiwu/limonp/archive/v$(version).tar.gz",
+    set_urls("https://github.com/yanyiwu/limonp/archive/8c50bfd6fc05c51e89ba36b02aad6b9531995d73.tar.gz",
         "https://github.com/yanyiwu/limonp.git")
-    add_versions("1.0.1", "c7b18794f020dbaa1006229b49a39217a463da0cb3586aee83eb7471f4ae71df")
+    add_versions("1.0.1", "57f57944ebe0078e64b240f071515b1d2692cb66479aed5de392070b48936d44")
 
     add_deps("cmake", "ninja")
 
     on_install(function(package)
-        -- https://github.com/yanyiwu/limonp/pull/37
-        io.replace("CMakeLists.txt", "DATADIR}/${PROJECT_NAME}/cmake",
-            "LIBDIR}/cmake/${PROJECT_NAME}", { plain = true })
         import("package.tools.cmake").install(package, { '-GNinja' })
     end)
 end

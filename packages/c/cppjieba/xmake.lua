@@ -8,28 +8,13 @@ do
     set_homepage("https://github.com/yanyiwu/cppjieba")
     set_description("Chinese word segmentation")
 
-    set_urls("https://github.com/yanyiwu/cppjieba/archive/v$(version).tar.gz",
+    set_urls("https://github.com/yanyiwu/cppjieba/archive/9408c1d08facc6e324dc90260e8cb20ecceebf70.tar.gz",
         "https://github.com/yanyiwu/cppjieba.git")
-    add_versions("5.6.0", "e6e517b778e0f4a99cbed1ee3eaa041616b74bc685e03a6ca08887ad9cedfe49")
+    add_versions("5.6.0", "ccc30d542f1b856a66fbb29bba6c27938c1792a675203c2f83876ab4b5ed933b")
 
     add_deps("cmake", "ninja", "limonp")
 
     on_install(function(package)
-        -- https://github.com/yanyiwu/cppjieba/pull/206
-        io.replace("CMakeLists.txt", "INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/deps/limonp/include",
-            [[find_package(limonp)
-if(limonp_FOUND)
-    get_target_property(LIMONP_INCLUDE_DIR limonp::limonp INTERFACE_INCLUDE_DIRECTORIES)
-else()
-    set(LIMONP_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/deps/limonp/include")
-endif()
-include(GNUInstallDirs)
-install(DIRECTORY include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(DIRECTORY dict/
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/cppjieba/dict)
-INCLUDE_DIRECTORIES("${LIMONP_INCLUDE_DIR}"]],
-            { plain = true })
         import("package.tools.cmake").install(package, { '-GNinja', '-DCPPJIEBA_TOP_LEVEL_PROJECT=OFF' })
     end)
 end
