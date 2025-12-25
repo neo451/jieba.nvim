@@ -110,7 +110,7 @@ end, { noremap = false, silent = true })
 By default, it doesn't use any user dictionary. You can:
 
 ```lua
-require"jieba.config".paths.user_dict_path = "/the/path/of/my/user.dict.utf8"
+require"jieba.jieba".Jieba.paths.user_dict_path = "/the/path/of/my/user.dict.utf8"
 ```
 
 ### HMM
@@ -118,5 +118,5 @@ require"jieba.config".paths.user_dict_path = "/the/path/of/my/user.dict.utf8"
 HMM can provide higher precision. You can disable it by:
 
 ```lua
-require"jieba.config".hmm = false
+require"jieba.jieba".Jieba.hmm = false
 ```
