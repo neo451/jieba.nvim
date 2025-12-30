@@ -1,7 +1,6 @@
-local paths = require "jieba.config".paths
-local jieba = require("jieba").jieba(paths.dict_path,
-    paths.model_path, paths.user_dict_path,
-    paths.idf_path, paths.stop_word_path)
+package.path = package.path .. ';lua/?.lua'
+
+local jieba = require "jieba.jieba".Jieba()
 
 -- luacheck: ignore 113
 ---@diagnostic disable: undefined-global
