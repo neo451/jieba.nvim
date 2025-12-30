@@ -130,3 +130,10 @@ HMM can provide higher precision. You can disable it by:
 ```lua
 require"jieba.jieba".Jieba.hmm = false
 ```
+
+## TODO
+
+- [rust-jieba](https://github.com/messense/rust-jieba) is faster than cppjieba.
+  Perhaps we can use it as new backend.
+- [decouple](https://github.com/neo451/jieba.nvim/issues/10) jieba's backend and
+  frontend
