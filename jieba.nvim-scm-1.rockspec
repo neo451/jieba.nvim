@@ -6,21 +6,27 @@ local repo_url = '$repo_url'
 
 rockspec_format = '3.0'
 package = '$package'
-version = modrev ..'-'.. specrev
+if modrev:sub(1, 1) == '$' then
+  modrev = "scm"
+  specrev = "1"
+  repo_url = "https://github.com/Freed-Wu/jieba.nvim"
+  package = repo_url:match("/([^/]+)/?$")
+end
+version = modrev .. '-' .. specrev
 
 description = {
   summary = '$summary',
-  detailed = $detailed_description,
-  labels = $labels,
+  detailed = '',
+  labels = { 'lua', 'neovim', 'jieba' },
   homepage = '$homepage',
-  $license
+  license = 'GPL-3.0',
 }
 
 build_dependencies = { "luanativeobjects" }
 
-dependencies = {"lua >= 5.1", "vim"}
+dependencies = { "lua >= 5.1", "vim" }
 
-test_dependencies = $test_dependencies
+test_dependencies = {}
 
 source = {
   url = repo_url .. '/archive/' .. git_ref .. '.zip',
@@ -35,7 +41,7 @@ end
 
 build = {
   type = 'xmake',
-  copy_directories = {'plugin'},
+  copy_directories = { 'plugin' },
   -- https://github.com/xmake-io/luarocks-build-xmake/pull/3
   install = {
     conf = {
