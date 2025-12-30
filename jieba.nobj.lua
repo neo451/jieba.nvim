@@ -3,6 +3,9 @@
 c_module "jieba" {
     use_globals = true,
     include "jieba.h",
+    c_source [[
+typedef jieba Jieba;
+]],
     object "Jieba" {
         constructor {
             c_call "jieba *>1" "jieba_new" { "const char *", "dict_path",

@@ -15,15 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: leso-kn/gh-actions-lua@master
+      - uses: leafo/gh-actions-lua@v12
         with:
           luaVersion: "5.1"
-      - uses: hishamhm/gh-actions-luarocks@master
+      - uses: leafo/gh-actions-luarocks@v6
       - uses: xmake-io/github-action-setup-xmake@v1
       - name: Install dependencies
         run: |
           luarocks install luanativeobjects
-      - uses: nvim-neorocks/luarocks-tag-release@v7
+      - uses: lumen-oss/luarocks-tag-release@v7
         env:
           LUAROCKS_API_KEY: ${{secrets.LUAROCKS_API_KEY}}
         if: "! startsWith(github.ref, 'refs/tags/')"
@@ -32,7 +32,7 @@ jobs:
             --force
           version: scm
           template: jieba.nvim-scm-1.rockspec
-      - uses: nvim-neorocks/luarocks-tag-release@v7
+      - uses: lumen-oss/luarocks-tag-release@v7
         env:
           LUAROCKS_API_KEY: ${{secrets.LUAROCKS_API_KEY}}
         if: startsWith(github.ref, 'refs/tags/')
