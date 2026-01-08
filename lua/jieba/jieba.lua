@@ -12,11 +12,11 @@ local M = {
         hmm = true,
         --- config for paths
         paths = {
-            dict_path = fs.joinpath(dict_dir, "jieba.dict.utf8"),      -- for dict
-            model_path = fs.joinpath(dict_dir, "hmm_model.utf8"),      -- for model
-            user_dict_path = fn.has 'win32' == 1 and "nul" or "/dev/null",  -- for user dict
-            idf_path = fs.joinpath(dict_dir, "idf.utf8"),              -- for idf
-            stop_word_path = fs.joinpath(dict_dir, "stop_words.utf8"), -- for stop words
+            dict_path = fs.joinpath(dict_dir, "jieba.dict.utf8"),          -- for dict
+            model_path = fs.joinpath(dict_dir, "hmm_model.utf8"),          -- for model
+            user_dict_path = fn.has 'win32' == 1 and "nul" or "/dev/null", -- for user dict
+            idf_path = fs.joinpath(dict_dir, "idf.utf8"),                  -- for idf
+            stop_word_path = fs.joinpath(dict_dir, "stop_words.utf8"),     -- for stop words
         }
     }
 }
@@ -56,7 +56,16 @@ function M.Jieba:cut(str, hmm)
     if hmm == nil then
         hmm = self.hmm
     end
-    return self.jieba:cut(str, hmm)
+    local tokens = {}
+    -- https://github.com/yanyiwu/cppjieba/issues/210
+    local N = 2000
+    for i = 0, math.floor(#str / N) do
+        local substr = str:sub(i * N + 1, (i + 1) * N)
+        for _, token in ipairs(self.jieba:cut(substr, hmm)) do
+            table.insert(tokens, token)
+        end
+    end
+    return tokens
 end
 
 return M
