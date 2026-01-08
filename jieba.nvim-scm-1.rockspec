@@ -24,7 +24,7 @@ description = {
 
 build_dependencies = { "luanativeobjects" }
 
-dependencies = { "lua >= 5.1", "vim" }
+dependencies = { "lua >= 5.1", "vim", "utf8" }
 
 test_dependencies = {}
 

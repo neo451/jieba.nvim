@@ -22,7 +22,7 @@
 -- SOFTWARE.
 
 local M = {}
-local ut = require("jieba.utils")
+local ut = require("utf8")
 
 local str_match = string.match
 local sub = ut.sub
