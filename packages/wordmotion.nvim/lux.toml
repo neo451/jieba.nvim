@@ -1,0 +1,27 @@
+package = "wordmotion.nvim"
+version = "0.0.1"
+lua = ">=5.1"
+
+[description]
+summary = "simulate vim's word motion"
+detailed = ""
+maintainer = "Wu"
+labels = ["neovim"]
+homepage = "https://github.com/Freed-Wu/jieba.nvim/tree/main/packages/wordmotion.nvim"
+license = 'GPL-3.0'
+
+[source]
+url = "https://github.com/Freed-Wu/jieba.nvim/archive/$(VERSION).zip"
+dir = "jieba.nvim-$(VERSION)/packages/$(PACKAGE)"
+
+[dependencies]
+utf8 = " >= 0.0.1"
+
+[test]
+type = "busted"
+
+[test_dependencies]
+vim = " >= 0.0.1"
+
+[build]
+type = "builtin"
