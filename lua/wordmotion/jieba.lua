@@ -1,33 +1,33 @@
 ---simulate b/e/w/ge
 -- luacheck: ignore 111 113
-local Cursor = require "wordmotion".Cursor
+local Motion = require "wordmotion".Motion
 local Jieba = require("jieba.jieba").Jieba
 local M = {
-    Cursor = {
+    Motion = {
     }
 }
 
----@param cursor table?
----@return table cursor
-function M.Cursor:new(cursor)
-    cursor = cursor or {}
-    cursor.jieba = cursor.jieba or Jieba()
-    cursor = Cursor(cursor)
-    setmetatable(cursor, {
+---@param motion table?
+---@return table motion
+function M.Motion:new(motion)
+    motion = motion or {}
+    motion.jieba = motion.jieba or Jieba()
+    motion = Motion(motion)
+    setmetatable(motion, {
         __index = self
     })
-    return cursor
+    return motion
 end
 
-setmetatable(M.Cursor, {
-    __index = Cursor,
-    __call = M.Cursor.new
+setmetatable(M.Motion, {
+    __index = Motion,
+    __call = M.Motion.new
 })
 
 ---cut string. abstract method
 ---@param str string
 ---@return {text: string, illegal: boolean?, start_index: integer, end_index: integer}[]
-function M.Cursor:get_tokens(str)
+function M.Motion:get_tokens(str)
     local tokens = {}
     local c = 0
     for _, text in ipairs(self.jieba:cut(str)) do
@@ -46,7 +46,7 @@ end
 ---set keymaps
 ---@param keymaps {string: boolean[]}}?
 ---@param modes string[]
-function M.Cursor:set_keymaps(keymaps, modes)
+function M.Motion:set_keymaps(keymaps, modes)
     keymaps = keymaps or {
         w = { true, true },
         b = { true, false },
