@@ -37,13 +37,25 @@ This project provides:
 - a lua binding for [cppjieba](https://github.com/yanyiwu/cppjieba)
 - a neovim plugin for Chinese w/b/e/ge.
 
+## Features
+
+- [x] support count like `3w`. Original
+  [jieba.nvim](https://github.com/neo451/jieba.nvim) doesn't support it.
+- [x] flexibility. A
+  [library](https://github.com/Freed-Wu/jieba.nvim/tree/main/packages/wordmotion.nvim)
+  is provided. Even you can realize a w/b/e/gw according to LLM's tokenize
+  algorithm.
+- [x] better performance than pure lua thank to cppjieba.
+- [ ] [rust-jieba](https://github.com/messense/rust-jieba) is faster than cppjieba.
+  Perhaps we can use it as a new backend.
+- [ ] text object `iw` and `dw`, `cw`, ...
+
 ## Related Projects
 
 - [coc-ci](https://github.com/fannheyward/coc-ci): based on
   [segmentit](https://github.com/linonetwo/segmentit). Written in nodejs.
 - [jieba.nvim](https://github.com/neo451/jieba.nvim): based on
   [jieba-lua](https://github.com/neo451/jieba-lua). Written in lua.
-  It doesn't support count like `3w`.
 - [jieba.vim](https://github.com/kkew3/jieba.vim): based on
   [jieba-rs](https://github.com/messense/jieba-rs)
   Written in python and rust.
@@ -143,8 +155,3 @@ local motion = Motion {
     }
 }
 ```
-
-## TODO
-
-- [rust-jieba](https://github.com/messense/rust-jieba) is faster than cppjieba.
-  Perhaps we can use it as new backend.
