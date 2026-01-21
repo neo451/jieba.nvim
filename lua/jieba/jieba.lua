@@ -23,7 +23,6 @@ local M = {
 
 ---@param jieba table?
 ---@return table? jieba
----@see ime.new
 function M.Jieba:new(jieba)
     jieba = jieba or {}
     setmetatable(jieba, {
