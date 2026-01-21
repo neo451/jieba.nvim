@@ -1,25 +1,25 @@
 ---simulate ^ and $
-local Cursor = require "wordmotion".Cursor
+local Motion = require "wordmotion".Motion
 local M = {
-    Cursor = {
+    Motion = {
         keep = true,
     }
 }
 
----@param cursor table?
----@return table cursor
-function M.Cursor:new(cursor)
-    cursor = cursor or {}
-    cursor = Cursor(cursor)
-    setmetatable(cursor, {
+---@param motion table?
+---@return table motion
+function M.Motion:new(motion)
+    motion = motion or {}
+    motion = Motion(motion)
+    setmetatable(motion, {
         __index = self
     })
-    return cursor
+    return motion
 end
 
-setmetatable(M.Cursor, {
-    __index = Cursor,
-    __call = M.Cursor.new
+setmetatable(M.Motion, {
+    __index = Motion,
+    __call = M.Motion.new
 })
 
 return M

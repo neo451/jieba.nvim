@@ -2,58 +2,58 @@
 -- luacheck: ignore 111 113 212
 local utf8 = require("utf8")
 local M = {
-    Cursor = {
+    Motion = {
         keep = false,
     }
 }
 
----@param cursor table?
----@return table? cursor
-function M.Cursor:new(cursor)
-    cursor = cursor or {}
-    setmetatable(cursor, {
+---@param motion table?
+---@return table? motion
+function M.Motion:new(motion)
+    motion = motion or {}
+    setmetatable(motion, {
         __index = self
     })
-    return cursor
+    return motion
 end
 
-setmetatable(M.Cursor, {
-    __call = M.Cursor.new
+setmetatable(M.Motion, {
+    __call = M.Motion.new
 })
 
 ---factory method
 ---@param txt string
 ---@return table
-function M.Cursor:from_path(txt)
+function M.Motion:from_path(txt)
     local f = io.open(txt)
-    local cursor = self()
+    local motion = self()
     if f then
-        cursor.lines = {}
+        motion.lines = {}
         for line in f:lines() do
-            table.insert(cursor.lines, line)
+            table.insert(motion.lines, line)
         end
         f:close()
     end
-    return cursor
+    return motion
 end
 
 ---cut string. abstract method
 ---@param str string
 ---@return {text: string, illegal: boolean?, start_index: integer, end_index: integer}[]
-function M.Cursor:get_tokens(str)
+function M.Motion:get_tokens(str)
     return { { text = str, start_index = 0, end_index = utf8.offset(str, -1) - 1 } }
 end
 
 ---get line
 ---@param l integer
 ---@return string line
-function M.Cursor:get_line(l)
+function M.Motion:get_line(l)
     return self.lines and self.lines[l] or vim.api.nvim_buf_get_lines(0, l - 1, l, true)[1]
 end
 
 ---get lines
 ---@return string[]
-function M.Cursor:get_lines()
+function M.Motion:get_lines()
     return self.lines or vim.api.nvim_buf_get_lines(0, 0, -1, true)
 end
 
@@ -61,7 +61,7 @@ end
 ---@param forward boolean
 ---@param cursor integer[]
 ---@return integer[] cursor
-function M.Cursor:get_character(forward, cursor)
+function M.Motion:get_character(forward, cursor)
     local l = cursor[1]
     local c = cursor[2]
     local line = self:get_line(l)
@@ -92,7 +92,7 @@ end
 ---@param begin boolean jump to token's begin: b/w
 ---@param cursor integer[]
 ---@return integer[] cursor
-function M.Cursor:get_cursor(count, begin, cursor)
+function M.Motion:get_cursor(count, begin, cursor)
     local l = cursor[1]
     local c = cursor[2]
     local line = self:get_line(l)
@@ -140,7 +140,7 @@ end
 ---@param begin boolean jump to token's begin: b/w
 ---@param cursor integer[]
 ---@return integer[] cursor
-function M.Cursor:get_position(count, begin, cursor)
+function M.Motion:get_position(count, begin, cursor)
     local pos = cursor
     if not self.keep then
         pos = self:get_character(count > 0, cursor)
@@ -155,7 +155,7 @@ end
 ---move cursor
 ---@param begin boolean jump to token's begin: b/w
 ---@param count integer?
-function M.Cursor:move(begin, count)
+function M.Motion:move(begin, count)
     count = count or vim.v.count1
     local cursor = vim.api.nvim_win_get_cursor(0)
     local pos = self:get_position(count, begin, cursor)
@@ -165,7 +165,7 @@ end
 ---callback for `vim.keymap.set()`
 ---@param begin boolean jump to token's begin: b/w
 ---@param forward boolean
-function M.Cursor:callback(begin, forward)
+function M.Motion:callback(begin, forward)
     return function ()
         self:move(begin, vim.v.count1 * (forward and 1 or -1))
     end

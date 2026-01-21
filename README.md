@@ -121,15 +121,15 @@ By default, it doesn't use any user dictionary. You can:
 
 ```lua
 local Jieba = require "jieba.jieba".Jieba
-local Cursor = require "wordmotion.jieba".Cursor
-local cursor = Cursor {
+local Motion = require "wordmotion.jieba".Motion
+local motion = Motion {
     jieba = Jieba {
         paths = {
             user_dict = "/the/path/of/my/user.dict.utf8"
         }
     }
 }
-cursor:set_keymaps()
+motion:set_keymaps()
 ```
 
 ### HMM
@@ -137,7 +137,7 @@ cursor:set_keymaps()
 HMM can provide higher precision. You can disable it by:
 
 ```lua
-local cursor = Cursor {
+local motion = Motion {
     jieba = Jieba {
         hmm = false,
     }
