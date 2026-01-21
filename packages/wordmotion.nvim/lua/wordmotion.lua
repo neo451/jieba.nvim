@@ -9,7 +9,6 @@ local M = {
 
 ---@param cursor table?
 ---@return table? cursor
----@see ime.new
 function M.Cursor:new(cursor)
     cursor = cursor or {}
     setmetatable(cursor, {
@@ -127,6 +126,10 @@ function M.Cursor:get_cursor(count, begin, cursor)
         token = tokens[index]
     end
     l = l + (count > 0 and 1 or -1)
+    local l_end = #self:get_lines()
+    if l < 1 or l > l_end then
+        return {}
+    end
     line = self:get_line(l)
     c = count > 0 and 0 or utf8.offset(line, -1) - 1
     return self:get_cursor(count, begin, { l, c })
@@ -138,20 +141,34 @@ end
 ---@param cursor integer[]
 ---@return integer[] cursor
 function M.Cursor:get_position(count, begin, cursor)
+    local pos = cursor
     if not self.keep then
-        cursor = self:get_character(count > 0, cursor)
+        pos = self:get_character(count > 0, cursor)
     end
-    local pos = self:get_cursor(count, begin, cursor)
+    pos = self:get_cursor(count, begin, pos)
+    if #pos == 0 then
+        pos = cursor
+    end
     return pos
 end
 
 ---move cursor
 ---@param begin boolean jump to token's begin: b/w
-function M.Cursor:move(begin)
-    local count = vim.v.count1
+---@param count integer?
+function M.Cursor:move(begin, count)
+    count = count or vim.v.count1
     local cursor = vim.api.nvim_win_get_cursor(0)
     local pos = self:get_position(count, begin, cursor)
     vim.api.nvim_win_set_cursor(0, pos)
+end
+
+---callback for `vim.keymap.set()`
+---@param begin boolean jump to token's begin: b/w
+---@param forward boolean
+function M.Cursor:callback(begin, forward)
+    return function ()
+        self:move(begin, vim.v.count1 * (forward and 1 or -1))
+    end
 end
 
 return M

@@ -12,11 +12,11 @@ local M = {
         hmm = true,
         --- config for paths
         paths = {
-            dict_path = fs.joinpath(dict_dir, "jieba.dict.utf8"),          -- for dict
-            model_path = fs.joinpath(dict_dir, "hmm_model.utf8"),          -- for model
-            user_dict_path = fn.has 'win32' == 1 and "nul" or "/dev/null", -- for user dict
-            idf_path = fs.joinpath(dict_dir, "idf.utf8"),                  -- for idf
-            stop_word_path = fs.joinpath(dict_dir, "stop_words.utf8"),     -- for stop words
+            dict = fs.joinpath(dict_dir, "jieba.dict.utf8"),          -- for dict
+            model = fs.joinpath(dict_dir, "hmm_model.utf8"),          -- for model
+            user_dict = fn.has 'win32' == 1 and "nul" or "/dev/null", -- for user dict
+            idf = fs.joinpath(dict_dir, "idf.utf8"),                  -- for idf
+            stop_word = fs.joinpath(dict_dir, "stop_words.utf8"),     -- for stop words
         }
     }
 }
@@ -38,9 +38,9 @@ function M.Jieba:new(jieba)
         end
         f:close()
     end
-    jieba.jieba = Jieba(jieba.paths.dict_path,
-        jieba.paths.model_path, jieba.paths.user_dict_path,
-        jieba.paths.idf_path, jieba.paths.stop_word_path)
+    jieba.jieba = Jieba(jieba.paths.dict,
+        jieba.paths.model, jieba.paths.user_dict,
+        jieba.paths.idf, jieba.paths.stop_word)
     return jieba
 end
 

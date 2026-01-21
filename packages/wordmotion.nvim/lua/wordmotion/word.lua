@@ -31,16 +31,17 @@ function M.Cursor:get_tokens(str)
     local c = 0
     local space = utf8.match(str, "^%s+")
     if space then
-        table.insert(tokens, { text = space, illegal = true, start_index = 0, end_index = #space - 1 })
+        table.insert(tokens, { text = space, illegal = true, start_index = 0, end_index = utf8.offset(space, -1) - 1 })
         c = c + #space
     end
     for match in utf8.gmatch(str, "%S+%s*") do
         local text = utf8.match(match, "%S+")
-        table.insert(tokens, { text = text, start_index = c, end_index = c + #text - 1 })
+        table.insert(tokens, { text = text, start_index = c, end_index = c + utf8.offset(text, -1) - 1 })
         c = c + #text
         space = utf8.match(match, "%s+")
         if space then
-            table.insert(tokens, { text = space, illegal = true, start_index = c, end_index = c + #space - 1 })
+            table.insert(tokens,
+                { text = space, illegal = true, start_index = c, end_index = c + utf8.offset(space, -1) - 1 })
             c = c + #space
         end
     end

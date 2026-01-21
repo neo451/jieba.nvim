@@ -32,12 +32,15 @@
 
 Use C/C++ to realize Chinese w/b/e/ge for neovim.
 
+![screencast](https://github.com/user-attachments/assets/9938f23b-bf35-4135-b26c-8cd22030f448)
+
 ## Related Projects
 
 - [coc-ci](https://github.com/fannheyward/coc-ci): based on
   [segmentit](https://github.com/linonetwo/segmentit). Written in nodejs.
 - [jieba.nvim](https://github.com/neo451/jieba.nvim): based on
   [jieba-lua](https://github.com/neo451/jieba-lua). Written in lua.
+  It doesn't support count like `3w`.
 - [jieba.vim](https://github.com/kkew3/jieba.vim): based on
   [jieba-rs](https://github.com/messense/jieba-rs)
   Written in python and rust.
@@ -99,28 +102,21 @@ require("lazy").setup {
 
 ## Configure
 
-### Keymap
-
-Be default, add keymaps for b/B/w/W/e/E/ge/gE. you can enable more:
-
-```lua
-vim.keymap.set("n", "ce", function()
-    require("jieba.nvim").wordmotion_change_w()
-end, { noremap = false, silent = true })
-vim.keymap.set("n", "de", function()
-    require("jieba.nvim").wordmotion_delete_w()
-end, { noremap = false, silent = true })
-vim.keymap.set("n", "viw", function()
-    require("jieba.nvim").wordmotion_select_w()
-end, { noremap = false, silent = true })
-```
-
 ### Dictionary
 
 By default, it doesn't use any user dictionary. You can:
 
 ```lua
-require"jieba.jieba".Jieba.paths.user_dict_path = "/the/path/of/my/user.dict.utf8"
+local Jieba = require "jieba.jieba".Jieba
+local Cursor = require "wordmotion.jieba".Cursor
+local cursor = Cursor {
+    jieba = Jieba {
+        paths = {
+            user_dict = "/the/path/of/my/user.dict.utf8"
+        }
+    }
+}
+cursor:set_keymaps()
 ```
 
 ### HMM
@@ -128,12 +124,14 @@ require"jieba.jieba".Jieba.paths.user_dict_path = "/the/path/of/my/user.dict.utf
 HMM can provide higher precision. You can disable it by:
 
 ```lua
-require"jieba.jieba".Jieba.hmm = false
+local cursor = Cursor {
+    jieba = Jieba {
+        hmm = false,
+    }
+}
 ```
 
 ## TODO
 
 - [rust-jieba](https://github.com/messense/rust-jieba) is faster than cppjieba.
   Perhaps we can use it as new backend.
-- [decouple](https://github.com/neo451/jieba.nvim/issues/10) jieba's backend and
-  frontend
