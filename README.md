@@ -1,34 +1,34 @@
 # jieba.nvim
 
 [![readthedocs](https://shields.io/readthedocs/jieba-nvim)](https://jieba-nvim.readthedocs.io)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Freed-Wu/jieba.nvim/main.svg)](https://results.pre-commit.ci/latest/github/Freed-Wu/jieba.nvim/main)
-[![github/workflow](https://github.com/Freed-Wu/jieba.nvim/actions/workflows/main.yml/badge.svg)](https://github.com/Freed-Wu/jieba.nvim/actions)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/rimeinn/jieba.nvim/main.svg)](https://results.pre-commit.ci/latest/github/rimeinn/jieba.nvim/main)
+[![github/workflow](https://github.com/rimeinn/jieba.nvim/actions/workflows/main.yml/badge.svg)](https://github.com/rimeinn/jieba.nvim/actions)
 
-[![github/downloads](https://shields.io/github/downloads/Freed-Wu/jieba.nvim/total)](https://github.com/Freed-Wu/jieba.nvim/releases)
-[![github/downloads/latest](https://shields.io/github/downloads/Freed-Wu/jieba.nvim/latest/total)](https://github.com/Freed-Wu/jieba.nvim/releases/latest)
-[![github/issues](https://shields.io/github/issues/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/issues)
-[![github/issues-closed](https://shields.io/github/issues-closed/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/issues?q=is%3Aissue+is%3Aclosed)
-[![github/issues-pr](https://shields.io/github/issues-pr/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/pulls)
-[![github/issues-pr-closed](https://shields.io/github/issues-pr-closed/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/pulls?q=is%3Apr+is%3Aclosed)
-[![github/discussions](https://shields.io/github/discussions/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/discussions)
-[![github/milestones](https://shields.io/github/milestones/all/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/milestones)
-[![github/forks](https://shields.io/github/forks/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/network/members)
-[![github/stars](https://shields.io/github/stars/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/stargazers)
-[![github/watchers](https://shields.io/github/watchers/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/watchers)
-[![github/contributors](https://shields.io/github/contributors/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/graphs/contributors)
-[![github/commit-activity](https://shields.io/github/commit-activity/w/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/graphs/commit-activity)
-[![github/last-commit](https://shields.io/github/last-commit/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/commits)
-[![github/release-date](https://shields.io/github/release-date/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/releases/latest)
+[![github/downloads](https://shields.io/github/downloads/rimeinn/jieba.nvim/total)](https://github.com/rimeinn/jieba.nvim/releases)
+[![github/downloads/latest](https://shields.io/github/downloads/rimeinn/jieba.nvim/latest/total)](https://github.com/rimeinn/jieba.nvim/releases/latest)
+[![github/issues](https://shields.io/github/issues/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/issues)
+[![github/issues-closed](https://shields.io/github/issues-closed/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/issues?q=is%3Aissue+is%3Aclosed)
+[![github/issues-pr](https://shields.io/github/issues-pr/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/pulls)
+[![github/issues-pr-closed](https://shields.io/github/issues-pr-closed/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/pulls?q=is%3Apr+is%3Aclosed)
+[![github/discussions](https://shields.io/github/discussions/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/discussions)
+[![github/milestones](https://shields.io/github/milestones/all/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/milestones)
+[![github/forks](https://shields.io/github/forks/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/network/members)
+[![github/stars](https://shields.io/github/stars/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/stargazers)
+[![github/watchers](https://shields.io/github/watchers/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/watchers)
+[![github/contributors](https://shields.io/github/contributors/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/graphs/contributors)
+[![github/commit-activity](https://shields.io/github/commit-activity/w/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/graphs/commit-activity)
+[![github/last-commit](https://shields.io/github/last-commit/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/commits)
+[![github/release-date](https://shields.io/github/release-date/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/releases/latest)
 
-[![github/license](https://shields.io/github/license/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim/blob/main/LICENSE)
-[![github/languages](https://shields.io/github/languages/count/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
-[![github/languages/top](https://shields.io/github/languages/top/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
-[![github/directory-file-count](https://shields.io/github/directory-file-count/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
-[![github/code-size](https://shields.io/github/languages/code-size/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
-[![github/repo-size](https://shields.io/github/repo-size/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
-[![github/v](https://shields.io/github/v/release/Freed-Wu/jieba.nvim)](https://github.com/Freed-Wu/jieba.nvim)
+[![github/license](https://shields.io/github/license/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim/blob/main/LICENSE)
+[![github/languages](https://shields.io/github/languages/count/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim)
+[![github/languages/top](https://shields.io/github/languages/top/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim)
+[![github/directory-file-count](https://shields.io/github/directory-file-count/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim)
+[![github/code-size](https://shields.io/github/languages/code-size/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim)
+[![github/repo-size](https://shields.io/github/repo-size/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim)
+[![github/v](https://shields.io/github/v/release/rimeinn/jieba.nvim)](https://github.com/rimeinn/jieba.nvim)
 
-[![luarocks](https://img.shields.io/luarocks/v/Freed-Wu/jieba.nvim)](https://luarocks.org/modules/Freed-Wu/jieba.nvim)
+[![luarocks](https://img.shields.io/luarocks/v/rimeinn/jieba.nvim)](https://luarocks.org/modules/rimeinn/jieba.nvim)
 
 ![screencast](https://github.com/user-attachments/assets/9938f23b-bf35-4135-b26c-8cd22030f448)
 
@@ -42,7 +42,7 @@ This project provides:
 - [x] support count like `3w`. Original
   [jieba.nvim](https://github.com/neo451/jieba.nvim) doesn't support it.
 - [x] flexibility. A
-  [library](https://github.com/Freed-Wu/jieba.nvim/tree/main/packages/wordmotion.nvim)
+  [library](https://github.com/rimeinn/jieba.nvim/tree/main/packages/wordmotion.nvim)
   is provided. Even you can realize a w/b/e/gw according to LLM's tokenize
   algorithm.
 - [x] better performance than pure lua thank to cppjieba.
@@ -110,7 +110,7 @@ $ luarocks --lua-version 5.1 --local --tree ~/.local/share/nvim/rocks install ji
 ```lua
 require("lazy").setup {
   spec = {
-    { "Freed-Wu/jieba.nvim", lazy = false },
+    { "rimeinn/jieba.nvim", lazy = false },
   },
 }
 ```
