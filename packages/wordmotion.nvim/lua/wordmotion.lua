@@ -104,26 +104,27 @@ function M.Motion:get_cursor(count, begin, cursor)
             break
         end
     end
-    assert(index > 0)
-    local token = tokens[index]
-    local _c = begin and token.start_index or token.end_index
-    if not token.illegal then
-        if count > 0 then
-            token.illegal = _c < c
-        else
-            token.illegal = _c > c
-        end
-    end
-    while token do
+    if index > 0 then
+        local token = tokens[index]
+        local _c = begin and token.start_index or token.end_index
         if not token.illegal then
-            count = count + (count > 0 and -1 or 1)
-            if count == 0 then
-                c = begin and token.start_index or token.end_index
-                return { l, c }
+            if count > 0 then
+                token.illegal = _c < c
+            else
+                token.illegal = _c > c
             end
         end
-        index = index + (count < 0 and -1 or 1)
-        token = tokens[index]
+        while token do
+            if not token.illegal then
+                count = count + (count > 0 and -1 or 1)
+                if count == 0 then
+                    c = begin and token.start_index or token.end_index
+                    return { l, c }
+                end
+            end
+            index = index + (count < 0 and -1 or 1)
+            token = tokens[index]
+        end
     end
     l = l + (count > 0 and 1 or -1)
     local l_end = #self:get_lines()
@@ -166,7 +167,7 @@ end
 ---@param begin boolean jump to token's begin: b/w
 ---@param forward boolean
 function M.Motion:callback(begin, forward)
-    return function ()
+    return function()
         self:move(begin, vim.v.count1 * (forward and 1 or -1))
     end
 end
