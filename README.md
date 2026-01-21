@@ -30,9 +30,12 @@
 
 [![luarocks](https://img.shields.io/luarocks/v/Freed-Wu/jieba.nvim)](https://luarocks.org/modules/Freed-Wu/jieba.nvim)
 
-Use C/C++ to realize Chinese w/b/e/ge for neovim.
-
 ![screencast](https://github.com/user-attachments/assets/9938f23b-bf35-4135-b26c-8cd22030f448)
+
+This project provides:
+
+- a lua binding for [cppjieba](https://github.com/yanyiwu/cppjieba)
+- a neovim plugin for Chinese w/b/e/ge.
 
 ## Related Projects
 
@@ -100,7 +103,17 @@ require("lazy").setup {
 }
 ```
 
-## Configure
+## Binding
+
+```lua
+local Jieba = require "jieba.jieba".Jieba
+local jieba = Jieba()
+local tokens = jieba:cut "他来到了网易杭研大厦"
+print(tokens[#tokens])
+-- 大厦
+```
+
+## Plugin
 
 ### Dictionary
 
