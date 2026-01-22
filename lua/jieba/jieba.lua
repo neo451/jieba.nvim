@@ -1,4 +1,5 @@
 ---wrap `require'jieba'.Jieba`
+local utf8 = require'utf8'
 local Jieba = require 'jieba'.jieba
 local fn = require 'vim.fn'
 local fs = require 'vim.fs'
@@ -57,9 +58,9 @@ function M.Jieba:cut(str, hmm)
     end
     local tokens = {}
     -- https://github.com/yanyiwu/cppjieba/issues/210
-    local N = 2000
+    local N = 600
     for i = 0, math.floor(#str / N) do
-        local substr = str:sub(i * N + 1, (i + 1) * N)
+        local substr = utf8.sub(str, i * N + 1, (i + 1) * N)
         for _, token in ipairs(self.jieba:cut(substr, hmm)) do
             table.insert(tokens, token)
         end
