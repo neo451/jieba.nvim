@@ -1,5 +1,5 @@
 package = "wordmotion.nvim"
-version = "0.0.3"
+version = "0.0.4"
 lua = ">=5.1"
 
 [description]
