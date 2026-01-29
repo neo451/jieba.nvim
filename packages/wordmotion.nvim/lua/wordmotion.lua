@@ -7,6 +7,13 @@ local M = {
     }
 }
 
+---get end index
+---@param str string
+---@return integer
+function M.end_index(str)
+    return (utf8.offset(str, -1) or 1) - 1
+end
+
 ---@param motion table?
 ---@return table? motion
 function M.Motion:new(motion)
@@ -41,7 +48,7 @@ end
 ---@param str string
 ---@return {text: string, illegal: boolean?, start_index: integer, end_index: integer}[]
 function M.Motion:get_tokens(str)
-    return { { text = str, start_index = 0, end_index = utf8.offset(str, -1) - 1 } }
+    return { { text = str, start_index = 0, end_index = M.end_index(str) } }
 end
 
 ---get line
@@ -76,13 +83,13 @@ function M.Motion:get_character(forward, cursor)
             return { 1, 0 }
         end
         line = self:get_line(l)
-        return { l, utf8.offset(line, -1) - 1 }
+        return { l, M.end_index(line) }
     end
     l = l + 1
     local l_end = #self:get_lines()
     if l > l_end then
         line = self:get_line(l_end)
-        return { l_end, utf8.offset(line, -1) - 1 }
+        return { l_end, M.end_index(line) }
     end
     return { l, 0 }
 end
@@ -132,7 +139,7 @@ function M.Motion:get_cursor(count, begin, cursor)
         return {}
     end
     line = self:get_line(l)
-    c = count > 0 and 0 or utf8.offset(line, -1) - 1
+    c = count > 0 and 0 or M.end_index(line)
     return self:get_cursor(count, begin, { l, c })
 end
 

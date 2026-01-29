@@ -24,7 +24,7 @@ setmetatable(M.Motion, {
     __call = M.Motion.new
 })
 
----cut string. abstract method
+---cut string to get **non-empty** words: `utf8.offset("", -1) == nil`
 ---@param str string
 ---@return {text: string, illegal: boolean?, start_index: integer, end_index: integer}[]
 function M.Motion:get_tokens(str)
