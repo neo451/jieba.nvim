@@ -43,20 +43,4 @@ function M.Motion:get_tokens(str)
     return tokens
 end
 
----set keymaps
----@param keymaps {string: boolean[]}}?
----@param modes string[]
-function M.Motion:set_keymaps(keymaps, modes)
-    keymaps = keymaps or {
-        w = { true, true },
-        b = { true, false },
-        e = { false, true },
-        ge = { false, false },
-    }
-    modes = modes or { "n", "x" }
-    for lhs, args in pairs(keymaps) do
-        vim.keymap.set(modes, lhs, self:callback(args[1], args[2]), { noremap = false })
-    end
-end
-
 return M
