@@ -1,4 +1,5 @@
 ---simulate h and l
+---@module wordmotion.char
 -- luacheck: ignore 212
 local Motion = require "wordmotion".Motion
 local utf8 = require("utf8")

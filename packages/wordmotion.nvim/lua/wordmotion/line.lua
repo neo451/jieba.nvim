@@ -1,4 +1,5 @@
 ---simulate ^ and $
+---@module wordmotion.line
 local Motion = require "wordmotion".Motion
 local M = {
     Motion = {

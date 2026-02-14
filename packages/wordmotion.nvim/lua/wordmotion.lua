@@ -1,4 +1,5 @@
 ---simulate vim's word motion
+---@module wordmotion
 -- luacheck: ignore 111 113 212
 local utf8 = require("utf8")
 local M = {

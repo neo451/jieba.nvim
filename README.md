@@ -20,7 +20,7 @@
 [![github/last-commit](https://shields.io/github/last-commit/neo451/jieba.nvim)](https://github.com/neo451/jieba.nvim/commits)
 [![github/release-date](https://shields.io/github/release-date/neo451/jieba.nvim)](https://github.com/neo451/jieba.nvim/releases/latest)
 
-[![github/license](https://shields.io/github/license/neo451/jieba.nvim)](https://github.com/neo451/jieba.nvim/blob/main/LICENSE)
+[![github/license](https://shields.io/github/license/neo451/jieba.nvim)](https://github.com/neo451/jieba.nvim/blob/master/LICENSE)
 [![github/languages](https://shields.io/github/languages/count/neo451/jieba.nvim)](https://github.com/neo451/jieba.nvim)
 [![github/languages/top](https://shields.io/github/languages/top/neo451/jieba.nvim)](https://github.com/neo451/jieba.nvim)
 [![github/directory-file-count](https://shields.io/github/directory-file-count/neo451/jieba.nvim)](https://github.com/neo451/jieba.nvim)
@@ -41,12 +41,12 @@ This project provides:
 
 - [x] support count like `3w`.
 - [x] flexibility. A
-  [library](https://github.com/neo451/jieba.nvim/tree/main/packages/wordmotion.nvim)
+  [library](https://github.com/neo451/jieba.nvim/tree/master/packages/wordmotion.nvim)
   is provided. Even you can realize a w/b/e/gw according to LLM's tokenize
   algorithm.
 - [x] better performance than pure lua thank to cppjieba.
 - [ ] [jieba-rs](https://github.com/messense/jieba-rs) is faster than cppjieba.
-  Perhaps we can use it to create `rjieba.nvim`.
+  Perhaps we can use it to create a new neovim plugin.
 - [ ] text object `iw` and `dw`, `cw`, ...
 
 ## Related Projects
