@@ -1,8 +1,12 @@
 ---simulate b/e/w/ge
 -- luacheck: ignore 111 113
 local Motion = require "wordmotion".Motion
-local Jieba = require("jieba.jieba").Jieba
 local M = {
+    backends = {
+        "rjieba.jieba",
+        "jieba.jieba",
+        "jieba.jieba-lua",
+    },
     Motion = {
     }
 }
@@ -11,7 +15,15 @@ local M = {
 ---@return table motion
 function M.Motion:new(motion)
     motion = motion or {}
-    motion.jieba = motion.jieba or Jieba()
+    if motion.jieba == nil then
+        for _, backend in ipairs(M.backends) do
+            local ok, mod = pcall(require, backend)
+            if ok then
+                motion.jieba = mod.Jieba()
+                break
+            end
+        end
+    end
     motion = Motion(motion)
     setmetatable(motion, {
         __index = self
