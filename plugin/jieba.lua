@@ -3,7 +3,7 @@
 -- luacheck: ignore 112 113
 vim.schedule(
     function()
-        require 'jieba.nvim'.init()
+        require 'wordmotion.nvim.jieba'.init()
     end
 )
-require 'jieba.nvim'.set_keymaps()
+require 'wordmotion.nvim.jieba'.set_keymaps()
