@@ -30,7 +30,7 @@
 
 [![luarocks](https://img.shields.io/luarocks/v/neo451/jieba.nvim)](https://luarocks.org/modules/rimeinn/jieba.nvim)
 
-![screencast](https://github.com/user-attachments/assets/9938f23b-bf35-4135-b26c-8cd22030f448)
+![screencast](https://github.com/user-attachments/assets/bc133f6f-a11c-4013-9493-34f2347983f8)
 
 This project provides:
 
@@ -39,23 +39,21 @@ This project provides:
 
 ## Features
 
-- [x] support count like `3w`. Original
-  [jieba.nvim](https://github.com/neo451/jieba.nvim) doesn't support it.
+- [x] support count like `3w`.
 - [x] flexibility. A
   [library](https://github.com/neo451/jieba.nvim/tree/main/packages/wordmotion.nvim)
   is provided. Even you can realize a w/b/e/gw according to LLM's tokenize
   algorithm.
 - [x] better performance than pure lua thank to cppjieba.
-- [ ] [rust-jieba](https://github.com/messense/rust-jieba) is faster than cppjieba.
-  Perhaps we can use it as a new backend.
+- [ ] [jieba-rs](https://github.com/messense/jieba-rs) is faster than cppjieba.
+  Perhaps we can use it to create `rjieba.nvim`.
 - [ ] text object `iw` and `dw`, `cw`, ...
 
 ## Related Projects
 
 - [coc-ci](https://github.com/fannheyward/coc-ci): based on
   [segmentit](https://github.com/linonetwo/segmentit). Written in nodejs.
-- [jieba.nvim](https://github.com/neo451/jieba.nvim): based on
-  [jieba-lua](https://github.com/neo451/jieba-lua). Written in lua.
+- [jieba-lua](https://github.com/neo451/jieba-lua): written in lua.
 - [jieba.vim](https://github.com/kkew3/jieba.vim): based on
   [jieba-rs](https://github.com/messense/jieba-rs)
   Written in python and rust.
