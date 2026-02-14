@@ -41,7 +41,7 @@ This project provides:
 
 - [x] support count like `3w`.
 - [x] flexibility. A
-  [library](https://github.com/neo451/jieba.nvim/tree/master/packages/wordmotion.nvim)
+  [library](https://github.com/neo451/jieba-lua/tree/master/packages/wordmotion.nvim)
   is provided. Even you can realize a w/b/e/gw according to LLM's tokenize
   algorithm.
 - [x] better performance than pure lua thank to cppjieba.
