@@ -9,7 +9,7 @@ package = '$package'
 if modrev:sub(1, 1) == '$' then
   modrev = "scm"
   specrev = "1"
-  repo_url = "https://github.com/rimeinn/jieba.nvim"
+  repo_url = "https://github.com/neo451/jieba.nvim"
   package = repo_url:match("/([^/]+)/?$")
 end
 version = modrev .. '-' .. specrev
