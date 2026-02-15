@@ -41,6 +41,7 @@ end
 
 build = {
   type = 'xmake',
+  copy_directories = { 'plugin' },
   -- https://github.com/xmake-io/luarocks-build-xmake/pull/3
   install = {
     conf = {
