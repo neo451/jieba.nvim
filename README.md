@@ -44,7 +44,8 @@ This project provides:
   [library](https://github.com/neo451/jieba-lua/tree/master/packages/wordmotion.nvim)
   is provided. Even you can realize a w/b/e/gw according to LLM's tokenize
   algorithm.
-- [x] better performance than pure lua thank to cppjieba.
+- [x] [better performance](https://github.com/neo451/jieba-lua/blob/master/packages/lua-profile)
+  than pure lua thank to cppjieba.
 - [ ] [jieba-rs](https://github.com/messense/jieba-rs) is faster than cppjieba.
   Perhaps we can use it to create a new neovim plugin.
 - [ ] text object `iw` and `dw`, `cw`, ...
