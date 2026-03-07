@@ -2,7 +2,6 @@
 ---@diagnostic disable: undefined-global, undefined-field
 -- will upload to
 -- https://github.com/xmake-io/xmake-repo
-includes("../../l/limonp")
 package("cppjieba")
 do
     set_homepage("https://github.com/yanyiwu/cppjieba")
