@@ -8,9 +8,9 @@ do
     set_homepage("https://github.com/yanyiwu/cppjieba")
     set_description("Chinese word segmentation")
 
-    set_urls("https://github.com/yanyiwu/cppjieba/archive/9408c1d08facc6e324dc90260e8cb20ecceebf70.tar.gz",
+    set_urls("https://github.com/yanyiwu/cppjieba/archive/v$(version).tar.gz",
         "https://github.com/yanyiwu/cppjieba.git")
-    add_versions("5.6.0", "ccc30d542f1b856a66fbb29bba6c27938c1792a675203c2f83876ab4b5ed933b")
+    add_versions("5.6.1", "34eb8a101707427c437d5ad9da2ecc2120e090ba0ed62b4f6ed7429e2efc3150")
 
     add_deps("cmake", "ninja", "limonp")
 
