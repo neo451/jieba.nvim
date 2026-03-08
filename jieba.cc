@@ -1,8 +1,8 @@
+#include <string.h>
+
 #include <cppjieba/Jieba.hpp>
 
 #include "jieba.h"
-
-#define DEFAULT_BUFFER_SIZE 1024
 
 using cppjieba::Jieba, cppjieba::Word, std::string, std::vector;
 
@@ -19,7 +19,7 @@ extern "C" char **jieba_cut(jieba *jieba, const char *str, bool hmm) {
   string s = str;
 
   reinterpret_cast<Jieba *>(jieba)->Cut(s, words, hmm);
-  char **results = (char **)malloc(sizeof(char *) * DEFAULT_BUFFER_SIZE);
+  char **results = (char **)malloc(sizeof(char *) * strlen(str));
   char **p = results;
   for (auto word : words)
     *p++ = strdup(word.c_str());
