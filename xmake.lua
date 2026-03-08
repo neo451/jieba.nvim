@@ -16,7 +16,7 @@ do
         function(target)
             local prefix = target:pkg("cppjieba"):installdir()
             -- https://github.com/xmake-io/luarocks-build-xmake/issues/6
-            target:add("installfiles", path.join(prefix, "share/cppjieba/(**)"), { prefixdir = "../lua/jieba" })
+            target:add("installfiles", path.join(prefix, "share/cppjieba/(**)"), { prefixdir = "../lua/cppjieba" })
         end
     )
 end
