@@ -1,11 +1,11 @@
 -- luacheck: ignore 113
 ---@diagnostic disable: undefined-global
-c_module "jieba" {
+c_module "cppjieba" {
     use_globals = true,
     include "jieba.h",
-    object "jieba" {
+    object "Jieba" {
         constructor {
-            c_call "jieba *>1" "jieba_new" { "const char *", "dict_path",
+            c_call "Jieba *>1" "jieba_new" { "const char *", "dict_path",
                 "const char *", "model_path", "const char *", "user_dict_path",
                 "const char *", "idf_path", "const char *", "stop_word_path" },
         },
