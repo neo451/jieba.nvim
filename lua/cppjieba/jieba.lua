@@ -1,5 +1,5 @@
----wrap `require'jieba'.Jieba`
-local Jieba = require 'jieba'.jieba
+---wrap `require'cppjieba'.Jieba`
+local Jieba = require 'cppjieba'.jieba
 local fn = require 'vim.fn'
 local fs = require 'vim.fs'
 local dict_dir = fs.joinpath(

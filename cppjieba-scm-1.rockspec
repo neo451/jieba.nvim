@@ -13,6 +13,7 @@ if modrev:sub(1, 1) == '$' then
   package = repo_url:match("/([^/]+)/?$")
 end
 version = modrev .. '-' .. specrev
+package = 'cppjieba'
 
 description = {
   summary = '$summary',

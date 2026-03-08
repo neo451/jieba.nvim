@@ -1,6 +1,6 @@
 package.path = package.path .. ';lua/?.lua'
 
-local jieba = require 'jieba.jieba'.Jieba()
+local jieba = require 'cppjieba.jieba'.Jieba()
 
 -- luacheck: ignore 113
 ---@diagnostic disable: undefined-global

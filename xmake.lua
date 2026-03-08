@@ -5,7 +5,7 @@ add_rules("mode.debug", "mode.release")
 
 add_requires("cppjieba")
 
-target("jieba")
+target("cppjieba")
 do
     add_includedirs("$(curdir)")
     add_rules("lua.module", "lua.native-objects")
