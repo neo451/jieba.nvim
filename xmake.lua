@@ -1,6 +1,5 @@
 -- luacheck: ignore 111 113 143
 ---@diagnostic disable: undefined-global, undefined-field
-includes("packages/c/cppjieba")
 add_rules("mode.debug", "mode.release")
 
 add_requires("cppjieba")
