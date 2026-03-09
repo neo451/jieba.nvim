@@ -2,7 +2,8 @@
 ---@diagnostic disable: undefined-global, undefined-field
 add_rules("mode.debug", "mode.release")
 
-add_requires("cppjieba")
+local version = "5.6.0"
+add_requires(("cppjieba %s"):format(version))
 
 target("cppjieba")
 do
@@ -12,10 +13,27 @@ do
     add_links("stdc++")
     add_packages("cppjieba")
     before_install(
+    -- luacheck: ignore 212/target
+    ---@diagnostic disable-next-line: unused-local
         function(target)
-            local prefix = target:pkg("cppjieba"):installdir()
-            -- https://github.com/xmake-io/luarocks-build-xmake/issues/6
-            target:add("installfiles", path.join(prefix, "share/cppjieba/(**)"), { prefixdir = "../lua/cppjieba" })
+            ---@diagnostic disable: undefined-field
+            -- luacheck: ignore 143
+            if not os.isdir("lua/cppjieba/dict") then
+                import("net.http")
+                import("utils.archive")
+
+                local url = ("https://github.com/yanyiwu/cppjieba/archive/v%s.zip"):format(version)
+                local zip = path.filename(url)
+                os.tryrm(zip)
+                http.download(url, zip)
+                local sourcedir = ("cppjieba-%s"):format(version)
+                os.tryrm(sourcedir)
+                if archive.extract(zip, ".") then
+                    os.mv(("%s/dict"):format(sourcedir), "lua/cppjieba")
+                end
+                os.tryrm(sourcedir)
+                os.tryrm(zip)
+            end
         end
     )
 end

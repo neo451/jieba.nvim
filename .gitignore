@@ -1,6 +1,6 @@
 _readthedocs/
 
-/lua/jieba/dict/
+dict/
 
 *.out
 compile_commands.json
