@@ -5,29 +5,31 @@ c_module "cppjieba" {
     include "jieba.h",
     object "Jieba" {
         constructor {
-            c_call "Jieba *>1" "jieba_new" { "const char *", "dict_path",
+            c_call "Jieba *>1" "NewJieba" { "const char *", "dict_path",
                 "const char *", "model_path", "const char *", "user_dict_path",
                 "const char *", "idf_path", "const char *", "stop_word_path" },
         },
         destructor "delete" {
-            c_method_call "void" "jieba_delete" {}
+            c_method_call "void" "FreeJieba" {}
         },
         method "cut" {
-            var_in { "const char *", "str" },
-            var_in { "bool", "hmm?" },
+            var_in { "const char *", "s" },
             var_out { "<any>", "words" },
             c_source [[
-                char **words = jieba_cut(${this}, ${str}, ${hmm});
-                char **p = words;
-                int i = 1;
-                lua_newtable(L);
-                while (*p) {
-                  lua_pushstring(L, *p);
-                  lua_rawseti(L, -2, i++);
-                  free(*p++);
-                }
-                free(words);
-            ]],
+  size_t len = strlen(${s});
+  CJiebaWord* words = Cut(${this}, ${s}, len);
+  CJiebaWord* x;
+  lua_newtable(L);
+  int i = 1;
+  for (x = words; x && x->word; x++) {
+      char *p = (char *)malloc(x->len + 1);
+      strncpy(p, x->word, x->len);
+      p[x->len] = '\0';
+      lua_pushstring(L, p);
+      lua_rawseti(L, -2, i++);
+  }
+  FreeWords(words);
+]],
         }
     },
 }

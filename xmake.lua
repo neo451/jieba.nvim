@@ -1,17 +1,18 @@
 -- luacheck: ignore 111 113 143
 ---@diagnostic disable: undefined-global, undefined-field
+includes("packages/c/cjieba")
 add_rules("mode.debug", "mode.release")
 
-local version = "5.6.0"
-add_requires(("cppjieba %s"):format(version))
+local version = "5.6.3"
+add_requires("cjieba", { version = version })
 
 target("cppjieba")
 do
-    add_includedirs("$(curdir)")
     add_rules("lua.module", "lua.native-objects")
-    add_files("*.cc", "*.nobj.lua")
-    add_links("stdc++")
-    add_packages("cppjieba")
+    add_files("*.nobj.lua")
+    add_packages("cjieba")
+    -- needed for adding cjieba
+    set_languages("c++17")
     before_install(
     -- luacheck: ignore 212/target
     ---@diagnostic disable-next-line: unused-local

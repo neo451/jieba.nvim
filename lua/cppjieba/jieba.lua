@@ -49,13 +49,12 @@ setmetatable(M.Jieba, {
 
 ---cut string
 ---@param str string
----@param hmm boolean?
 ---@return string[]
-function M.Jieba:cut(str, hmm)
-    if hmm == nil then
-        hmm = self.hmm
-    end
-    return self.jieba:cut(str, hmm)
+function M.Jieba:cut(str)
+    -- if hmm == nil then
+    --     hmm = self.hmm
+    -- end
+    return self.jieba:cut(str)
 end
 
 return M
