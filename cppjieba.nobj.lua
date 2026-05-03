@@ -15,13 +15,16 @@ c_module "cppjieba" {
         method "cut" {
             var_in { "const char *", "s" },
             var_out { "<any>", "words" },
+            c_source "pre" [[
+    size_t len;
+    int i;
+    CJiebaWord *x, *words;
+]],
             c_source [[
-  size_t len = strlen(${s});
-  CJiebaWord* words = Cut(${this}, ${s}, len);
-  CJiebaWord* x;
+  len = strlen(${s});
+  words = Cut(${this}, ${s}, len);
   lua_newtable(L);
-  int i = 1;
-  for (x = words; x && x->word; x++) {
+  for (i = 1, x = words; x && x->word; x++) {
       char *p = (char *)malloc(x->len + 1);
       strncpy(p, x->word, x->len);
       p[x->len] = '\0';
