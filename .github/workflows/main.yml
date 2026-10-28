@@ -12,33 +12,41 @@
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on:
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.runs-on }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: leafo/gh-actions-lua@v12
-        with:
-          luaVersion: "5.1"
-      - uses: leafo/gh-actions-luarocks@v6
       - uses: xmake-io/github-action-setup-xmake@v1
-      - name: Install dependencies
+      - uses: actions/checkout@v4
+      - name: Generate extra.rockspec
         run: |
-          luarocks install luanativeobjects
-      - uses: lumen-oss/luarocks-tag-release@v7
+          perl -00ne 'print if $. == 2' ./*-scm-1.rockspec > extra.rockspec
+      - uses: lumen-oss/luarocks-tag-release@v9
         env:
-          LUAROCKS_API_KEY: ${{secrets.LUAROCKS_API_KEY}}
+          LUX_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
+        with:
+          lux_version: latest
+          name: cppjieba
+      - name: Pack
+        run: |
+          lx --lua-version=5.1 pack
+      - uses: actions/upload-artifact@v4
         if: "! startsWith(github.ref, 'refs/tags/')"
         with:
-          extra_luarocks_args: |
-            --force
-          version: scm
-          name: cppjieba
-          template: cppjieba-scm-1.rockspec
-      - uses: lumen-oss/luarocks-tag-release@v7
-        env:
-          LUAROCKS_API_KEY: ${{secrets.LUAROCKS_API_KEY}}
+          path: |
+            *.rock
+      - uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          extra_luarocks_args: |
-            --force
-          name: cppjieba
-          template: cppjieba-scm-1.rockspec
+          files: |
+            *.rock
+      - name: Upload
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          scripts/upload.sh ./*.rock
+        env:
+          LUAROCKS_API_KEY: ${{ secrets.LUAROCKS_API_KEY }}
