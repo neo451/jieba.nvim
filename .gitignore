@@ -1,6 +1,8 @@
 _readthedocs/
 
-dict/
+cppjieba-*/
+*.zip
+*.utf8
 
 *.out
 compile_commands.json

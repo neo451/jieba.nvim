@@ -7,10 +7,10 @@ do
     set_homepage("https://github.com/yanyiwu/cjieba")
     set_description("Chinese word segmentation")
 
-    set_urls("https://github.com/yanyiwu/cjieba/archive/1db462d33255aff08802c248b6d6e59202b5619e.tar.gz",
+    set_urls("https://github.com/yanyiwu/cjieba/archive/285df97b913b116c4fee2401902cf1173677813d.tar.gz",
         "https://github.com/yanyiwu/cjieba.git")
 
-    add_deps("cppjieba")
+    add_deps("cppjieba", { version = "5.6.7" })
 
     on_install(function(package)
         io.writefile("xmake.lua", ([[

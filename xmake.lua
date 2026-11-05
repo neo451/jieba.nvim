@@ -3,7 +3,7 @@
 includes("packages/c/cjieba")
 add_rules("mode.debug", "mode.release")
 
-local version = "5.6.3"
+local version = "5.6.7"
 add_requires("cjieba", { version = version })
 
 target("cppjieba")
@@ -19,21 +19,20 @@ do
         function(target)
             ---@diagnostic disable: undefined-field
             -- luacheck: ignore 143
-            if not os.isdir("lua/cppjieba/dict") then
-                import("net.http")
-                import("utils.archive")
-
+            if not os.isdir("etc/conf") then
                 local url = ("https://github.com/yanyiwu/cppjieba/archive/v%s.zip"):format(version)
                 local zip = path.filename(url)
-                os.tryrm(zip)
-                http.download(url, zip)
+                if not os.isfile(zip) then
+                    import("net.http")
+                    http.download(url, zip)
+                end
                 local sourcedir = ("cppjieba-%s"):format(version)
                 os.tryrm(sourcedir)
+                import("utils.archive")
                 if archive.extract(zip, ".") then
-                    os.mv(("%s/dict"):format(sourcedir), "lua/cppjieba")
+                    os.mv(sourcedir .. "/dict/*.utf8", "etc/conf/", { rootdir = sourcedir .. "/dict" })
+                    os.mv(sourcedir .. "/dict/pos_dict/*.utf8", "etc/conf/pos_dict/", { rootdir = sourcedir .. "/dict/pos_dict" })
                 end
-                os.tryrm(sourcedir)
-                os.tryrm(zip)
             end
         end
     )

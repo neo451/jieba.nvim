@@ -1,18 +1,22 @@
 ---wrap `require'cppjieba'.Jieba`
+local datafile = require 'datafile'
 local Jieba = require 'cppjieba'.Jieba
 local fn = require 'vim.fn'
 local fs = require 'vim.fs'
-local dict_dir = fs.joinpath(
-    fs.dirname(debug.getinfo(1).source:match("@?(.*)")),
-    "dict"
-)
+local _f, dict_path = datafile.open("conf/jieba.dict.utf8")
+if _f then
+    _f:close()
+else
+    dict_path = debug.getinfo(1).source:match("@?(.*/)[^/]+/[^/]+/[^/]+$") .. "etc/conf/jieba.dict.utf8"
+end
+local dict_dir = fs.dirname(dict_path)
 local M = {
     Jieba = {
         --- if hmm is enabled
         hmm = true,
         --- config for paths
         paths = {
-            dict = fs.joinpath(dict_dir, "jieba.dict.utf8"),          -- for dict
+            dict = dict_path,                                                 -- for dict
             model = fs.joinpath(dict_dir, "hmm_model.utf8"),          -- for model
             user_dict = fn.has 'win32' == 1 and "nul" or "/dev/null", -- for user dict
             idf = fs.joinpath(dict_dir, "idf.utf8"),                  -- for idf
