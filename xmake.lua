@@ -3,7 +3,7 @@
 includes("packages/c/cjieba")
 add_rules("mode.debug", "mode.release")
 
-local version = "5.6.3"
+local version = "5.6.7"
 add_requires("cjieba", { version = version })
 
 target("cppjieba")
@@ -30,7 +30,8 @@ do
                 local sourcedir = ("cppjieba-%s"):format(version)
                 os.tryrm(sourcedir)
                 if archive.extract(zip, ".") then
-                    os.mv(("%s/dict"):format(sourcedir), "lua/cppjieba")
+                    os.tryrm("etc")
+                    os.mv(sourcedir .. "/dict/**.utf8", "etc/conf", {rootdir = sourcedir .. "/dict"})
                 end
                 os.tryrm(sourcedir)
                 os.tryrm(zip)

@@ -1,6 +1,6 @@
 _readthedocs/
 
-dict/
+*.utf8
 
 *.out
 compile_commands.json
